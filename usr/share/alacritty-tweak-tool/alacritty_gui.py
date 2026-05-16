@@ -9,11 +9,11 @@ from datetime import date
 import gi
 gi.require_version("Gtk", "4.0")
 gi.require_version("Vte", "3.91")
-from gi.repository import Gdk, GLib, Gtk, Pango, Vte
+from gi.repository import Gdk, GLib, Gtk, Pango, Vte  # noqa: E402
 
-import alacritty_config as cfg
-import alacritty_themes as themes
-import log
+import alacritty_config as cfg  # noqa: E402
+import alacritty_themes as themes  # noqa: E402
+import log  # noqa: E402
 
 _vte_themes = None
 _vte_appearance = None
