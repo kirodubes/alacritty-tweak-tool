@@ -8,7 +8,6 @@ from datetime import date
 
 import gi
 gi.require_version("Gtk", "4.0")
-gi.require_version("Vte", "3.91")
 from gi.repository import Gdk, GLib, Gtk, Pango, Vte  # noqa: E402
 
 import alacritty_config as cfg  # noqa: E402
@@ -18,6 +17,7 @@ import log  # noqa: E402
 _vte_themes = None
 _vte_appearance = None
 _vte_creator = None
+_creator_btns = None
 
 
 # ── Helpers ────────────────────────────────────────────────────────────────────
@@ -408,6 +408,20 @@ def _build_themes_tab(window):
         _apply_vte_colors(vte_terminal, row.theme_colors)
         if _vte_appearance is not None:
             _apply_vte_colors(_vte_appearance, row.theme_colors)
+        if _vte_creator is not None:
+            _apply_vte_colors(_vte_creator, row.theme_colors)
+        if _creator_btns is not None:
+            for section, keys in (("primary", ("background", "foreground")),
+                                  ("cursor", ("text", "cursor"))):
+                for key in keys:
+                    if key in row.theme_colors.get(section, {}):
+                        _creator_btns[f"{section}.{key}"].set_rgba(
+                            _hex_to_rgba(str(row.theme_colors[section][key])))
+            for section in ("normal", "bright"):
+                for name in _ANSI_NAMES:
+                    if name in row.theme_colors.get(section, {}):
+                        _creator_btns[f"{section}.{name}"].set_rgba(
+                            _hex_to_rgba(str(row.theme_colors[section][name])))
         btn_apply.set_sensitive(True)
         btn_delete.set_sensitive(
             row.source_label == "My Themes" and os.path.isfile(_user_theme_path(row.theme_name))
@@ -540,25 +554,26 @@ def _populate_theme_list(window, by_source):
     btn_tone_all, btn_tone_dark, btn_tone_light = window._tone_buttons
 
     labels = list(by_source.keys())
-    display_labels = [f"{lbl}  ·  {len(by_source[lbl])}" for lbl in labels]
+    total_count = sum(len(by_source[lbl]) for lbl in labels)
+    all_display = f"All Themes  ·  {total_count}"
+    display_labels = [all_display] + [f"{lbl}  ·  {len(by_source[lbl])}" for lbl in labels]
 
     # Populate source_labels before updating model to avoid a stale read in on_source_changed.
+    # Index 0 is the sentinel "" meaning "show all sources".
     source_labels.clear()
-    source_labels.extend(labels)
+    source_labels.extend([""] + labels)
 
     prefs = cfg.load_prefs()
     saved_source = prefs.get("source", "")
     saved_search = prefs.get("search", "")
     saved_tone = prefs.get("tone", "all")
 
+    source_drop.set_model(Gtk.StringList.new(display_labels))
     if saved_source in labels:
         current_source[0] = saved_source
-        source_drop.set_model(Gtk.StringList.new(display_labels))
-        source_drop.set_selected(labels.index(saved_source))
+        source_drop.set_selected(labels.index(saved_source) + 1)
     else:
-        if labels:
-            current_source[0] = labels[0]
-        source_drop.set_model(Gtk.StringList.new(display_labels))
+        current_source[0] = ""
         source_drop.set_selected(0)
 
     if saved_search:
@@ -1459,7 +1474,8 @@ def _build_creator_tab(window, notebook):
     paned.append(left_scroll)
     paned.append(Gtk.Separator(orientation=Gtk.Orientation.VERTICAL))
 
-    global _vte_creator
+    global _vte_creator, _creator_btns
+    _creator_btns = btns
     vte_box, _, vte_terminal = _build_vte_panel("Color Preview")
     _vte_creator = vte_terminal
     paned.append(vte_box)
@@ -1565,6 +1581,8 @@ def _build_creator_tab(window, notebook):
         prefs = cfg.load_prefs()
         prefs["last_source"] = "My Themes"
         cfg.save_prefs(prefs)
+        while (child := window._theme_listbox.get_first_child()):
+            window._theme_listbox.remove(child)
         threading.Thread(target=_load_themes_async, args=(window,), daemon=True).start()
         GLib.timeout_add(300, lambda: notebook.set_current_page(0) or False)
 
