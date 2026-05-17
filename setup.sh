@@ -1,49 +1,115 @@
 #!/bin/bash
-#
+set -euo pipefail
 ##################################################################################################################
-# Written to be used on 64 bits computers
-# Author 	: 	Erik Dubois
-# Website 	: 	http://www.erikdubois.be
-##################################################################################################################
+# Author    : Erik Dubois
+# Website   : https://www.erikdubois.be
 ##################################################################################################################
 #
 #   DO NOT JUST RUN THIS. EXAMINE AND JUDGE. RUN AT YOUR OWN RISK.
 #
 ##################################################################################################################
 
-# Problem solving commands
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 
-# Read before using it.
-# https://www.atlassian.com/git/tutorials/undoing-changes/git-reset
-# git reset --hard orgin/master
-# ONLY if you are very sure and no coworkers are on your github.
+##################################################################################################################
+# Colors
+##################################################################################################################
+if command -v tput >/dev/null 2>&1 && [[ -t 1 ]]; then
+    RED="$(tput setaf 1)"
+    GREEN="$(tput setaf 2)"
+    YELLOW="$(tput setaf 3)"
+    BLUE="$(tput setaf 4)"
+    CYAN="$(tput setaf 6)"
+    RESET="$(tput sgr0)"
+else
+    RED="" GREEN="" YELLOW="" BLUE="" CYAN="" RESET=""
+fi
 
-# Command that have helped in the past
-# Force git to overwrite local files on pull - no merge
-# git fetch all
-# git push --set-upstream origin master
-# git reset --hard orgin/master
+##################################################################################################################
+# Logging
+##################################################################################################################
+log_section() {
+    echo
+    echo "${GREEN}################################################################################${RESET}"
+    echo "$1"
+    echo "${GREEN}################################################################################${RESET}"
+    echo
+}
 
-project=$(basename `pwd`)
-echo "-----------------------------------------------------------------------------"
-echo "this is project https://github.com/erikdubois/"$project
-echo "-----------------------------------------------------------------------------"
-git config --global pull.rebase false
-git config --global user.name "Erik Dubois"
-git config --global user.email "erik.dubois@gmail.com"
-sudo git config --system core.editor nano
-#git config --global credential.helper cache
-#git config --global credential.helper 'cache --timeout=32000'
-git config --global push.default simple
+log_info() {
+    echo
+    echo "${BLUE}########################################################################${RESET}"
+    echo "$1"
+    echo "${BLUE}########################################################################${RESET}"
+    echo
+}
 
-git remote set-url origin git@github.com-edu:erikdubois/$project
+log_warn() {
+    echo
+    echo "${YELLOW}########################################################################${RESET}"
+    echo "$1"
+    echo "${YELLOW}########################################################################${RESET}"
+    echo
+}
 
-echo "Everything set"
+log_error() {
+    echo
+    echo "${RED}########################################################################${RESET}"
+    echo "$1"
+    echo "${RED}########################################################################${RESET}"
+    echo
+}
 
-echo
-tput setaf 6
-echo "######################################################"
-echo "###################  $(basename $0) done"
-echo "######################################################"
-tput sgr0
-echo
+log_success() {
+    echo
+    echo "${GREEN}########################################################################${RESET}"
+    echo "$1"
+    echo "${GREEN}########################################################################${RESET}"
+    echo
+}
+
+##################################################################################################################
+# Error handling
+##################################################################################################################
+on_error() {
+    local lineno="$1"
+    local cmd="$2"
+    echo
+    echo "${RED}ERROR on line ${lineno}: ${cmd}${RESET}"
+    echo
+    sleep 10
+}
+
+trap 'on_error "$LINENO" "$BASH_COMMAND"' ERR
+
+##################################################################################################################
+# Functions
+##################################################################################################################
+configure_git() {
+    local project
+    project="$(basename "${SCRIPT_DIR}")"
+
+    log_section "Configuring git for project: ${project}"
+    log_info "https://github.com/erikdubois/${project}"
+
+    git config --global pull.rebase false
+    git config --global user.name "Erik Dubois"
+    git config --global user.email "erik.dubois@gmail.com"
+    sudo git config --system core.editor nano
+    git config --global push.default simple
+
+    git -C "${SCRIPT_DIR}" remote set-url origin "git@github.com-edu:erikdubois/${project}"
+
+    log_success "Git configured — remote set to git@github.com-edu:erikdubois/${project}"
+}
+
+##################################################################################################################
+# Main
+##################################################################################################################
+main() {
+    configure_git
+
+    log_success "$(basename "$0") done"
+}
+
+main "$@"
