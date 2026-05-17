@@ -12,6 +12,38 @@ THEMES_BASE_DIR = os.path.join(BASE_DIR, "data", "themes")
 # Use pwd to get home from uid, not HOME env var — sudo -E can inherit HOME=/root
 _real_home = pwd.getpwuid(os.getuid()).pw_dir
 USER_THEMES_BASE = os.path.join(_real_home, ".config", "alacritty-tweak-tool", "themes")
+_CACHE_PATH = os.path.join(_real_home, ".config", "alacritty-tweak-tool", "theme_cache.json")
+_CACHE_VERSION = 1
+
+
+def _dir_signature(directory):
+    """Return (file_count, max_mtime) for .toml files in directory — cheap stat, no parse."""
+    entries = [e for e in os.scandir(directory) if e.name.endswith(".toml")]
+    if not entries:
+        return (0, 0.0)
+    return (len(entries), max(e.stat().st_mtime for e in entries))
+
+
+def _load_cache():
+    """Return cached sources dict, or {} if missing/stale/corrupt."""
+    try:
+        with open(_CACHE_PATH, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        if data.get("version") != _CACHE_VERSION:
+            return {}
+        return data.get("sources", {})
+    except Exception:
+        return {}
+
+
+def _save_cache(sources_cache):
+    """Write sources cache to JSON; silently skip on error."""
+    try:
+        os.makedirs(os.path.dirname(_CACHE_PATH), exist_ok=True)
+        with open(_CACHE_PATH, "w", encoding="utf-8") as f:
+            json.dump({"version": _CACHE_VERSION, "sources": sources_cache}, f)
+    except Exception:
+        pass
 
 
 def _load_from_dir(directory):
@@ -55,8 +87,13 @@ def load_themes_by_source():
     Each subdirectory of data/themes/ is one source. A source.json file inside
     the subdirectory provides the display label and package metadata.
     Adding a new source is as simple as creating a new subdirectory.
+    Parsed theme data is cached in theme_cache.json and invalidated per-directory
+    by (file_count, max_mtime) so edits and additions are always picked up.
     """
+    cache = _load_cache()
+    cache_dirty = False
     sources = {}
+
     for base in (THEMES_BASE_DIR, USER_THEMES_BASE):
         if not os.path.isdir(base):
             continue
@@ -64,9 +101,19 @@ def load_themes_by_source():
             if not entry.is_dir():
                 continue
             label = _source_label(entry.path, entry.name)
-            items = _load_from_dir(entry.path)
+            sig = _dir_signature(entry.path)
+            cached = cache.get(entry.path)
+            if cached and cached.get("sig") == list(sig):
+                items = [(n, c) for n, c in cached["themes"]]
+            else:
+                items = _load_from_dir(entry.path)
+                cache[entry.path] = {"sig": list(sig), "themes": [[n, c] for n, c in items]}
+                cache_dirty = True
             if items:
                 sources[label] = items
+
+    if cache_dirty:
+        _save_cache(cache)
 
     return sources
 
