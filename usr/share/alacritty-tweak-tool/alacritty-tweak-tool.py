@@ -50,6 +50,9 @@ class Main(Gtk.ApplicationWindow):
         gui_module.build(self, _alacritty_version())
         log.log_timing("GUI built")
         log.log_section("Alacritty Tweak Tool started")
+        themes_dir = os.path.join(BASE_DIR, "data", "themes")
+        toml_count = sum(1 for _, _, files in os.walk(themes_dir) for f in files if f.endswith(".toml"))
+        log.log_info(f"{toml_count} themes in total")
         last_theme = alacritty_config.load_prefs().get("last_theme", "")
         if last_theme:
             log.log_info(f"Current theme: {last_theme}")

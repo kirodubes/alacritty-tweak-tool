@@ -67,7 +67,7 @@ def load_themes_by_source():
             items = _load_from_dir(entry.path)
             if items:
                 sources[label] = items
-                log.log_info(f"{len(items)} themes from '{label}' ({entry.name}/)")
+
     return sources
 
 
