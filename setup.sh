@@ -98,9 +98,9 @@ configure_git() {
     sudo git config --system core.editor nano
     git config --global push.default simple
 
-    git -C "${SCRIPT_DIR}" remote set-url origin "git@github.com-edu:erikdubois/${project}"
+    git -C "${SCRIPT_DIR}" remote set-url origin "git@github.com:erikdubois/${project}"
 
-    log_success "Git configured — remote set to git@github.com-edu:erikdubois/${project}"
+    log_success "Git configured — remote set to git@github.com:erikdubois/${project}"
 }
 
 ############################################################
