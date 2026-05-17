@@ -44,7 +44,12 @@ class Main(Gtk.ApplicationWindow):
 
     def __init__(self, app):
         super().__init__(application=app, title="Alacritty Tweak Tool")
-        self.set_default_size(900, 580)
+        prefs = alacritty_config.load_prefs()
+        w = prefs.get("window_width", 900)
+        h = prefs.get("window_height", 580)
+        self.set_default_size(w, h)
+        self.connect("notify::default-width", self._on_size_changed)
+        self.connect("notify::default-height", self._on_size_changed)
         self._load_css()
         self._build_headerbar()
         gui_module.build(self, _alacritty_version())
@@ -53,9 +58,16 @@ class Main(Gtk.ApplicationWindow):
         themes_dir = os.path.join(BASE_DIR, "data", "themes")
         toml_count = sum(1 for _, _, files in os.walk(themes_dir) for f in files if f.endswith(".toml"))
         log.log_info(f"{toml_count} themes in total")
-        last_theme = alacritty_config.load_prefs().get("last_theme", "")
+        last_theme = prefs.get("last_theme", "")
         if last_theme:
             log.log_info(f"Current theme: {last_theme}")
+
+    def _on_size_changed(self, _widget, _param):
+        w, h = self.get_default_size()
+        prefs = alacritty_config.load_prefs()
+        prefs["window_width"] = w
+        prefs["window_height"] = h
+        alacritty_config.save_prefs(prefs)
 
     def _build_headerbar(self):
         headerbar = Gtk.HeaderBar()
