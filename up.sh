@@ -86,16 +86,13 @@ trap 'on_error "$LINENO" "$BASH_COMMAND"' ERR
 # Functions
 ##################################################################################################################
 clean_pycache() {
-    log_section "Cleaning __pycache__"
-
     local found
     found=$(find "${SCRIPT_DIR}" -type d -name "__pycache__" 2>/dev/null)
 
     if [[ -n "${found}" ]]; then
+        log_section "Cleaning __pycache__"
         find "${SCRIPT_DIR}" -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
         log_success "__pycache__ removed"
-    else
-        log_info "No __pycache__ found"
     fi
 }
 
