@@ -8,7 +8,13 @@ from datetime import date
 
 import gi
 gi.require_version("Gtk", "4.0")
-from gi.repository import Gdk, GLib, Gtk, Pango, Vte  # noqa: E402
+from gi.repository import Gdk, GLib, Gtk, Pango  # noqa: E402
+
+try:
+    from gi.repository import Vte
+    _VTE_AVAILABLE = True
+except (ImportError, Exception):
+    _VTE_AVAILABLE = False
 
 import alacritty_config as cfg  # noqa: E402
 import alacritty_themes as themes  # noqa: E402
@@ -99,6 +105,8 @@ def _hex_to_rgba(hex_str):
 
 def _apply_vte_colors(vte, colors):
     """Apply a theme colors dict to a Vte.Terminal, updating palette live."""
+    if not _VTE_AVAILABLE or vte is None:
+        return
     primary = colors.get("primary", {})
     fg = _hex_to_rgba(str(primary.get("foreground", "#aaaaaa")))
     bg = _hex_to_rgba(str(primary.get("background", "#000000")))
@@ -135,7 +143,7 @@ def _spawn_in_vte(vte):
 def _build_vte_panel(label_text):
     """Create a labelled VTE preview panel with font from the current Alacritty config.
 
-    Returns (box, label, vte). Fastfetch spawns automatically on first size-allocate.
+    Returns (box, label, vte). vte is None when VTE is unavailable.
     """
     box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
     box.set_margin_start(12)
@@ -146,6 +154,15 @@ def _build_vte_panel(label_text):
     lbl.set_margin_top(8)
     lbl.set_margin_bottom(6)
     box.append(lbl)
+
+    if not _VTE_AVAILABLE:
+        placeholder = _label("Terminal preview unavailable — install vte3 (GTK4 build)")
+        placeholder.set_vexpand(True)
+        placeholder.set_valign(Gtk.Align.CENTER)
+        placeholder.set_xalign(0.5)
+        placeholder.add_css_class("dim-label")
+        box.append(placeholder)
+        return box, lbl, None
 
     ff, fs = cfg.get_current_font()
     vte = Vte.Terminal()
@@ -795,7 +812,8 @@ def _build_appearance_tab(window):
         model = font_drop.get_model()
         family = model.get_string(idx) if model and idx < model.get_n_items() else current_family
         font_desc = Pango.FontDescription.from_string(f"{family} {size_spin.get_value():.1f}")
-        vte_preview.set_font(font_desc)
+        if vte_preview is not None:
+            vte_preview.set_font(font_desc)
         if _vte_themes is not None:
             _vte_themes.set_font(font_desc)
         if _vte_creator is not None:
@@ -816,7 +834,8 @@ def _build_appearance_tab(window):
         sm_idx = startup_drop.get_selected()
         sm = startup_list[sm_idx] if sm_idx < len(startup_list) else "Windowed"
         cfg.apply_window_style(dec, dynamic_title_switch.get_active(), sm, blur_switch.get_active())
-        vte_preview.set_font(Pango.FontDescription.from_string(f"{family} {size:.1f}"))
+        if vte_preview is not None:
+            vte_preview.set_font(Pango.FontDescription.from_string(f"{family} {size:.1f}"))
 
     def on_reset_appearance(_widget):
         active_fonts = mono_fonts[0] if mono_switch.get_active() else all_fonts[0]
@@ -1498,7 +1517,8 @@ def _build_creator_tab(window, notebook):
     for btn in btns.values():
         btn.connect("color-set", _on_color_changed)
 
-    vte_terminal.connect("realize", lambda _w: _apply_vte_colors(vte_terminal, _read_colors()))
+    if vte_terminal is not None:
+        vte_terminal.connect("realize", lambda _w: _apply_vte_colors(vte_terminal, _read_colors()))
 
     # ── Wallpaper browse + extract ────────────────────────────────────────────
     if shutil.which("convert"):
