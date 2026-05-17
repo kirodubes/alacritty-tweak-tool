@@ -28,6 +28,10 @@ git pull --rebase
 # Restore stashed changes
 git stash pop
 
+# Remove Python bytecode cache before staging
+find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
+find . -name "*.pyc" -delete 2>/dev/null || true
+
 # Below command will backup everything inside the project folder
 git add --all .
 
