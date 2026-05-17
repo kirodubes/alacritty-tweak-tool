@@ -197,7 +197,7 @@ def build(window, version="1.0.0"):
     lbl_version.set_valign(Gtk.Align.CENTER)
 
     btn_quit = Gtk.Button(label="Quit")
-    btn_quit.connect("clicked", lambda _w: window.get_application().quit())
+    btn_quit.connect("clicked", lambda _w: window.close())
 
     hbox_title.append(title)
     hbox_title.append(lbl_version)
