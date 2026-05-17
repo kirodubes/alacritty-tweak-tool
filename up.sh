@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euo pipefail
+#set -e
 ##################################################################################################################
 # Author    : Erik Dubois
 # Website   : https://www.erikdubois.be
@@ -19,30 +19,62 @@ set -euo pipefail
 #tput setaf 8 = light blue
 ##################################################################################################################
 
-# Stash any unstaged changes so rebase can proceed cleanly
-git stash
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+WORKDIR="${SCRIPT_DIR}"
 
-# Pull latest changes before doing anything
-git pull --rebase
+git_commit_and_push() {
+    local branch
 
-# Restore stashed changes
-git stash pop
+    log_section "Git add / commit / push"
+    git add --all .
 
-# Remove Python bytecode cache before staging
-find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
-find . -name "*.pyc" -delete 2>/dev/null || true
+    if [[ -z "$(git status --porcelain)" ]]; then
+        log_info "Nothing to commit — working tree clean"
+    else
+        git commit -m "update" || log_error "Git commit failed"
+    fi
 
-# Below command will backup everything inside the project folder
-git add --all .
+    branch="$(git rev-parse --abbrev-ref HEAD)"
 
-# skip commit if nothing staged
-git diff --cached --quiet || git commit -m "update"
+    if ! git push -u origin "${branch}"; then
+        log_warn "Push rejected — rebasing on remote changes and retrying"
+        git pull --rebase origin "${branch}" || { log_error "Rebase failed — resolve conflicts manually"; return 1; }
+        git push -u origin "${branch}" || log_error "Git push failed after rebase"
+    fi
+}
 
-# Push the local files to github
+git_pull() {
+    log_section "Git pull"
+    git -C "${SCRIPT_DIR}" pull || log_warn "Git pull failed — continuing with local state"
+}
 
-branch=$(git branch --show-current)
-echo "Using $branch"
-git push -u origin "$branch"
+ensure_git_remote_configured() {
+    local remote_url
+    remote_url="$(git -C "${SCRIPT_DIR}" remote get-url origin 2>/dev/null || true)"
+    if [[ "${remote_url}" != *"github.com-edu"* ]]; then
+        log_section "Git remote not configured — running setup.sh first"
+        bash "${SCRIPT_DIR}/setup.sh"
+    fi
+}
+
+
+main() {
+
+
+    ensure_git_remote_configured
+    git_pull
+    git_commit_and_push
+
+    echo
+    tput setaf 6
+    echo "##############################################################"
+    echo "###################  $(basename "$0") done"
+    echo "##############################################################"
+    tput sgr0
+    echo
+}
+
+main "$@"
 
 echo "################################################################"
 echo "###################    Git Push Done      ######################"
