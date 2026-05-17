@@ -1,5 +1,5 @@
 #!/bin/bash
-#set -e
+set -euo pipefail
 ##################################################################################################################
 # Author    : Erik Dubois
 # Website   : https://www.erikdubois.be
@@ -8,19 +8,26 @@
 #   DO NOT JUST RUN THIS. EXAMINE AND JUDGE. RUN AT YOUR OWN RISK.
 #
 ##################################################################################################################
-#tput setaf 0 = black
-#tput setaf 1 = red
-#tput setaf 2 = green
-#tput setaf 3 = yellow
-#tput setaf 4 = dark blue
-#tput setaf 5 = purple
-#tput setaf 6 = cyan
-#tput setaf 7 = gray
-#tput setaf 8 = light blue
-##################################################################################################################
-COMMON_DIR="$(cd -- "${SCRIPT_DIR}/common" && pwd)"
+
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-WORKDIR="${SCRIPT_DIR}"
+COMMON_DIR="${SCRIPT_DIR}/common"
+
+# shellcheck source=common/common.sh
+source "${COMMON_DIR}/common.sh"
+
+clean_pycache() {
+    log_section "Cleaning __pycache__"
+
+    local found
+    found=$(find "${SCRIPT_DIR}" -type d -name "__pycache__" 2>/dev/null)
+
+    if [[ -n "${found}" ]]; then
+        find "${SCRIPT_DIR}" -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
+        log_success "__pycache__ removed"
+    else
+        log_info "No __pycache__ found"
+    fi
+}
 
 git_commit_and_push() {
     local branch
@@ -57,25 +64,13 @@ ensure_git_remote_configured() {
     fi
 }
 
-
 main() {
-
-
+    clean_pycache
     ensure_git_remote_configured
     git_pull
     git_commit_and_push
 
-    echo
-    tput setaf 6
-    echo "##############################################################"
-    echo "###################  $(basename "$0") done"
-    echo "##############################################################"
-    tput sgr0
-    echo
+    log_success "$(basename "$0") done"
 }
 
 main "$@"
-
-echo "################################################################"
-echo "###################    Git Push Done      ######################"
-echo "################################################################"
