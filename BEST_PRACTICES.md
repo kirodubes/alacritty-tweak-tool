@@ -1,5 +1,13 @@
 # Claude Best Practices
 
+## 2026-05-17 (session end — alacritty-tweak-tool, round 2)
+
+**Tip: Cache directory contents with `(file_count, max_mtime)` as the invalidation key — no hashing needed**
+`os.scandir()` gives you mtime and name cheaply. `(len(entries), max(e.stat().st_mtime for e in entries))` catches file additions, deletions, and in-place edits with zero file reads. Store it as a JSON list alongside the cached data; compare with `==`. This pattern is appropriate wherever you have a directory of immutable-ish files that are expensive to parse (TOML, XML, etc.) and want a fast warm-path on subsequent runs.
+
+**Tip: `tomlkit` is slow by design — use it only for writes, not reads**
+`tomlkit` preserves comments and formatting by doing a full document parse. For read-only use (loading theme colors, reading config values), the overhead is unnecessary. Cache parsed data as plain JSON (`json.dump`/`json.load`) after the first tomlkit parse so subsequent reads hit the fast C JSON parser. Only call tomlkit when you need to write back a file while preserving its comments.
+
 ## 2026-05-17 (session end — alacritty-tweak-tool)
 
 **Tip: In GTK4, use `close-request` + `get_width()`/`get_height()` to persist window size — not `notify::default-width`**

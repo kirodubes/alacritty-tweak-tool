@@ -1,12 +1,13 @@
 # Alacritty Tweak Tool — Changelog
 
-## 2026.05.17 - VTE optional + window size persistence
+## 2026.05.17 - VTE optional + window size persistence + theme cache
 
 ### What Changed
 
 - Made VTE (terminal preview) optional — app starts and works fully on systems where `vte4` is not installed or where `vte3` (GTK3 build) is installed instead
 - Corrected all references from `vte3` to `vte4` (on Arch, `vte3` is GTK3; `vte4` is GTK4)
 - Window size is now persisted across launches via `prefs.json`
+- Theme list now loads from a JSON cache on second+ launch: **1429ms → 3ms**
 
 ### Technical Details
 
@@ -14,11 +15,13 @@
 - `alacritty-tweak-tool.py`: reads `window_width`/`window_height` from prefs on startup (defaults 900×580); connects `close-request` to save actual size via `get_width()`/`get_height()` before exit
 - `alacritty_gui.py`: Quit button changed from `get_application().quit()` to `window.close()` so `close-request` fires and size is saved
 - `README.md` + `CLAUDE.md`: updated dependency from `vte3` to `vte4 (optional)`
+- `alacritty_themes.py`: added `_dir_signature()` (count + max mtime of .toml files), `_load_cache()`, `_save_cache()`; `load_themes_by_source()` checks signature per directory and falls through to tomlkit only on miss; cache written to `~/.config/alacritty-tweak-tool/theme_cache.json`
 
 ### Files Modified
 
 - `usr/share/alacritty-tweak-tool/alacritty_gui.py`
 - `usr/share/alacritty-tweak-tool/alacritty-tweak-tool.py`
+- `usr/share/alacritty-tweak-tool/alacritty_themes.py`
 - `CLAUDE.md`
 - `README.md`
 
