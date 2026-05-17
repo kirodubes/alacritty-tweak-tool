@@ -11,9 +11,10 @@ gi.require_version("Gtk", "4.0")
 from gi.repository import Gdk, GLib, Gtk, Pango  # noqa: E402
 
 try:
+    gi.require_version('Vte', '3.91')
     from gi.repository import Vte
     _VTE_AVAILABLE = True
-except (ImportError, Exception):
+except (ImportError, ValueError, Exception):
     _VTE_AVAILABLE = False
 
 import alacritty_config as cfg  # noqa: E402
