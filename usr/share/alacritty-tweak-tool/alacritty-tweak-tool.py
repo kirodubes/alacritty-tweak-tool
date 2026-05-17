@@ -48,8 +48,7 @@ class Main(Gtk.ApplicationWindow):
         w = prefs.get("window_width", 900)
         h = prefs.get("window_height", 580)
         self.set_default_size(w, h)
-        self.connect("notify::default-width", self._on_size_changed)
-        self.connect("notify::default-height", self._on_size_changed)
+        self.connect("close-request", self._on_close)
         self._load_css()
         self._build_headerbar()
         gui_module.build(self, _alacritty_version())
@@ -62,12 +61,12 @@ class Main(Gtk.ApplicationWindow):
         if last_theme:
             log.log_info(f"Current theme: {last_theme}")
 
-    def _on_size_changed(self, _widget, _param):
-        w, h = self.get_default_size()
+    def _on_close(self, _widget):
         prefs = alacritty_config.load_prefs()
-        prefs["window_width"] = w
-        prefs["window_height"] = h
+        prefs["window_width"] = self.get_width()
+        prefs["window_height"] = self.get_height()
         alacritty_config.save_prefs(prefs)
+        return False
 
     def _build_headerbar(self):
         headerbar = Gtk.HeaderBar()
