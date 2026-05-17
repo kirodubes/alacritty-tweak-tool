@@ -157,4 +157,5 @@ If the user re-asks after a proposal+question, just implement — they missed th
 
 ## Recent Work
 
+- **2026.05.17** — VTE made optional (GTK3/GTK4 conflict on XFCE4 VirtualBox); window size persisted via `close-request` + prefs.json; Quit button fixed to use `window.close()` so save fires; all `vte3` references corrected to `vte4`
 - **2026.05.16** — Initial standalone project split from archlinux-tweak-tool-gtk4
