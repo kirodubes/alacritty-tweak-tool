@@ -19,7 +19,7 @@ Alacritty Tweak Tool is a standalone GTK4 Python application for configuring the
 - Python 3.8+
 - GTK4 (4.6+) + GObject Introspection
 - `python-tomlkit` — TOML R/W with comment preservation
-- `vte3` — embedded terminal preview (VTE 3.91)
+- `vte4` — embedded terminal preview (GTK4 build of VTE; optional — app works without it)
 - `alacritty` — the terminal being configured
 - `fc-list` — font enumeration
 - `fastfetch` (optional) — used inside VTE preview; falls back to bash

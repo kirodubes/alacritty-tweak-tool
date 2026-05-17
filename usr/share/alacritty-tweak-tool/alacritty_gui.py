@@ -156,7 +156,7 @@ def _build_vte_panel(label_text):
     box.append(lbl)
 
     if not _VTE_AVAILABLE:
-        placeholder = _label("Terminal preview unavailable — install vte3 (GTK4 build)")
+        placeholder = _label("Terminal preview unavailable — install vte4")
         placeholder.set_vexpand(True)
         placeholder.set_valign(Gtk.Align.CENTER)
         placeholder.set_xalign(0.5)

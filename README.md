@@ -31,7 +31,7 @@ sudo pacman -S alacritty-tweak-tool
 ## Requirements
 
 - `python-tomlkit` — `sudo pacman -S python-tomlkit`
-- `vte3` — `sudo pacman -S vte3`
+- `vte4` — `sudo pacman -S vte4` (optional; enables terminal preview panels)
 - `alacritty` — the terminal being configured
 - `fastfetch` (optional) — used inside the VTE preview panel
 - `imagemagick` (optional) — wallpaper color extraction in Creator tab
