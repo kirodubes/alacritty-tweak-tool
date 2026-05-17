@@ -18,7 +18,7 @@
 #tput setaf 7 = gray
 #tput setaf 8 = light blue
 ##################################################################################################################
-
+COMMON_DIR="$(cd -- "${SCRIPT_DIR}/common" && pwd)"
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 WORKDIR="${SCRIPT_DIR}"
 
