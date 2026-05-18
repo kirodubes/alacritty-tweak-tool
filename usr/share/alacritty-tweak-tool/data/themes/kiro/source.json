@@ -1,0 +1,13 @@
+{
+  "label": "Kiro",
+  "package": "kiro",
+  "type": "bundled",
+  "version": "latest",
+  "source_path": "data/themes/kiro/",
+  "copied_date": "2026-05-18",
+  "last_checked": "2026-05-18",
+  "theme_count": 1,
+  "check_command": "",
+  "update_command": null,
+  "notes": "Curated themes for the Kiro distro. Edit manually."
+}
