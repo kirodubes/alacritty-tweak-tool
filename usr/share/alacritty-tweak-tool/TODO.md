@@ -43,15 +43,6 @@
       wallpaper → auto-populate → tweak → save. Dependency: prefer ImageMagick (in
       official repos); detect at runtime and show an install prompt if missing.
 
-- [ ] **VTE logo squashed in Themes tab**: fastfetch ASCII logo renders squashed/flat in the
-      Themes tab VTE despite using `_build_vte_panel` (same function as Creator/Appearance).
-      Root cause: Themes VTE is realized at startup while GTK layout is still settling;
-      Creator/Appearance are realized later (on tab switch) so layout is complete.
-      `timeout_add(200)` and `PRIORITY_LOW` idle both fail to defer long enough.
-      Attempted: `size-allocate` signal (not exposed on Vte.Terminal), multiple idle strategies.
-      Next idea: connect to `map` signal instead of `realize`, or use a longer timeout (500ms+),
-      or pass `--logo-width` / `COLUMNS` env to constrain fastfetch output width explicitly.
-
 - [ ] **Dark/Light auto-split**: detect background luminance, filter button alongside search
 - [x] **Current colors row**: pinned "Current theme" row at top of list; bypasses source
       filter, still matches search; shows current config colors as swatch
