@@ -1,5 +1,36 @@
 # Alacritty Tweak Tool — Changelog
 
+## 2026.05.18 - ruff formatting + VTE resize respawn + Theme Sources GUI in Dev tab
+
+### What Changed
+
+- Switched linter/formatter from flake8 to ruff; applied `ruff format` across all Python source files
+- Fixed VTE fastfetch logo squashed when app starts from a terminal: strip `COLUMNS` env var so fastfetch reads PTY width via ioctl; use 500ms polling on `map` signal with a two-poll stability check before spawning; `clear` before each respawn
+- VTE now respawns fastfetch when column count changes (e.g. window resize) instead of showing stale layout
+- Dev tab (hidden behind `--dev`) rewritten to use a central `data/themes/registry.json`; shows all known sources with install status and Install/Update buttons
+- Cleared TODO — all items resolved or closed
+
+### Technical Details
+
+- `ruff check` + `ruff format` replace flake8; both now run in CI and session-end checks
+- VTE spawn: `realize` signal replaced by `map` + 500ms `GLib.timeout_add` poll; `state["pending"]` tracks the previous column count so spawn only fires when the count is stable for two consecutive polls; `COLUMNS` stripped from `envv` passed to `spawn_async`; old process killed via `os.kill(pid, signal.SIGTERM)` before respawn; `signal` module added to imports
+- `data/themes/registry.json`: master list of 19 sources (dirname, label, type, source_path, theme_count, update_command, notes); new sources can be added here without touching Python
+- `_build_dev_tab()`: reads `registry.json`; cross-references against `os.path.isfile(source_json/source.json)` to determine installed status; single `_on_action` handler checks live install state at click time so Install button automatically becomes Update after first successful install; writes `source.json` with `copied_date`/`last_checked` set to today after install completes; dead `return outer` after `return scroll` removed
+- Scheduled remote reminder for 2026-07-18 to check for new AUR theme sources
+
+### Files Modified
+
+- `usr/share/alacritty-tweak-tool/alacritty_gui.py`
+- `usr/share/alacritty-tweak-tool/alacritty-tweak-tool.py`
+- `usr/share/alacritty-tweak-tool/alacritty_config.py`
+- `usr/share/alacritty-tweak-tool/alacritty_themes.py`
+- `usr/share/alacritty-tweak-tool/log.py`
+- `usr/share/alacritty-tweak-tool/data/themes/registry.json` (new)
+- `CLAUDE.md`
+- `TODO.md`
+- `.claude/memory/feedback_flake8_auto_fix.md`
+- `.claude/memory/MEMORY.md`
+
 ## 2026.05.17 - VTE optional + window size persistence + theme cache
 
 ### What Changed
