@@ -108,8 +108,8 @@ ensure_git_remote_configured() {
         exit 1
     fi
     remote_url="$(git -C "${SCRIPT_DIR}" remote get-url origin 2>/dev/null || true)"
-    if [[ "${remote_url}" != *"github.com"* ]]; then
-        log_section "Git remote not configured — running setup.sh first"
+    if [[ "${remote_url}" != git@* ]]; then
+        log_warn "Git remote is not SSH (${remote_url:-unset}) — running setup.sh to fix"
         bash "${SCRIPT_DIR}/setup.sh"
     fi
 }

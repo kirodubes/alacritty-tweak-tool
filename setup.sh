@@ -92,7 +92,9 @@ configure_git() {
     log_section "Configuring git for project: ${project}"
 
     git config --global pull.rebase false
-    sudo git config --system core.editor nano
+    if [[ "$(git config --system --get core.editor 2>/dev/null)" != "nano" ]]; then
+        sudo git config --system core.editor nano
+    fi
     git config --global push.default simple
 
     if [[ "${SCRIPT_DIR}" == */EDU*/* ]]; then
