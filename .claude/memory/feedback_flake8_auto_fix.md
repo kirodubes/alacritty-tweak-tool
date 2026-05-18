@@ -1,17 +1,15 @@
 ---
-name: Auto-Fix All Flake8 Issues
-description: User approves automatic flake8 fixes without asking permission
+name: Auto-Fix All Ruff Issues
+description: User approves automatic ruff fixes without asking permission; project switched from flake8 to ruff
 type: feedback
 originSessionId: 2a60f01d-b4ca-4151-ad28-48141fb328d5
 ---
-**Rule:** Answer yes to all flake8 violations automatically. Never ask permission — just run flake8 and fix all issues.
+**Rule:** Run `ruff check` and fix all violations automatically. Never ask permission.
 
-**Why:** User expects flake8 compliance as non-negotiable standard; asking for confirmation on each violation is unnecessary friction.
+**Why:** User switched from flake8 to ruff (2026-05-18); ruff compliance is a non-negotiable standard; asking for confirmation on each violation is unnecessary friction.
 
 **How to apply:** When running code quality tasks:
-1. Run flake8 on the file/module
-2. Fix all violations automatically (Edit tool)
-3. Re-run flake8 to verify pass
+1. Run `ruff check <file/dir>`
+2. Fix all violations automatically (Edit tool or `ruff check --fix`)
+3. Re-run ruff to verify pass
 4. Move on — no "should I fix this?" needed
-
-This applies to E402, W503, W504, E128, E203, and any other configured ignores.

@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """Alacritty Tweak Tool — GTK4 config editor for Alacritty terminal."""
+
 import os
 import subprocess
 import sys
 
 import gi
+
 gi.require_version("Gtk", "4.0")
 from gi.repository import Gtk  # noqa: E402
 
@@ -19,7 +21,9 @@ import log  # noqa: E402
 def _alacritty_version():
     """Return the installed alacritty version string, or 'unknown'."""
     try:
-        out = subprocess.run(["alacritty", "--version"], capture_output=True, text=True, timeout=3)
+        out = subprocess.run(
+            ["alacritty", "--version"], capture_output=True, text=True, timeout=3
+        )
         # output is e.g. "alacritty 0.14.0"
         parts = out.stdout.strip().split()
         return parts[1] if len(parts) >= 2 else out.stdout.strip()
@@ -55,7 +59,12 @@ class Main(Gtk.ApplicationWindow):
         log.log_timing("GUI built")
         log.log_section("Alacritty Tweak Tool started")
         themes_dir = os.path.join(BASE_DIR, "data", "themes")
-        toml_count = sum(1 for _, _, files in os.walk(themes_dir) for f in files if f.endswith(".toml"))
+        toml_count = sum(
+            1
+            for _, _, files in os.walk(themes_dir)
+            for f in files
+            if f.endswith(".toml")
+        )
         log.log_info(f"{toml_count} themes in total")
         last_theme = prefs.get("last_theme", "")
         if last_theme:

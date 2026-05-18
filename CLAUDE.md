@@ -102,7 +102,7 @@ Never mention `--dev` in UI text, logs, or conversation — hidden means hidden.
 
 ### Code Style
 
-- `flake8` must pass before any Python work is considered done; auto-fix all violations without asking
+- `ruff` must pass before any Python work is considered done; auto-fix all violations without asking
 - Max line length: 120
 - `snake_case` for variables/functions, `PascalCase` for classes
 - One-line docstrings on public functions/methods (PEP 257); private (`_`-prefixed) don't require them
@@ -141,7 +141,7 @@ Before any work:
 
 ### Session End
 
-1. Run flake8, fix any issues
+1. Run ruff check, fix any issues
 2. Run the app and confirm it still launches without errors
 3. Update CHANGELOG.md (date + What Changed / Technical Details / Files Modified)
 4. Update this CLAUDE.md (Recent Work section)

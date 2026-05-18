@@ -1,4 +1,5 @@
 """Theme discovery, color swatch helpers, and apply logic."""
+
 import json
 import os
 import pwd
@@ -12,7 +13,9 @@ THEMES_BASE_DIR = os.path.join(BASE_DIR, "data", "themes")
 # Use pwd to get home from uid, not HOME env var — sudo -E can inherit HOME=/root
 _real_home = pwd.getpwuid(os.getuid()).pw_dir
 USER_THEMES_BASE = os.path.join(_real_home, ".config", "alacritty-tweak-tool", "themes")
-_CACHE_PATH = os.path.join(_real_home, ".config", "alacritty-tweak-tool", "theme_cache.json")
+_CACHE_PATH = os.path.join(
+    _real_home, ".config", "alacritty-tweak-tool", "theme_cache.json"
+)
 _CACHE_VERSION = 1
 
 
@@ -107,7 +110,10 @@ def load_themes_by_source():
                 items = [(n, c) for n, c in cached["themes"]]
             else:
                 items = _load_from_dir(entry.path)
-                cache[entry.path] = {"sig": list(sig), "themes": [[n, c] for n, c in items]}
+                cache[entry.path] = {
+                    "sig": list(sig),
+                    "themes": [[n, c] for n, c in items],
+                }
                 cache_dirty = True
             if items:
                 sources[label] = items
@@ -164,7 +170,10 @@ def export_theme(name, colors):
     if not os.path.isfile(source_json):
         with open(source_json, "w", encoding="utf-8") as f:
             json.dump({"label": "My Themes"}, f)
-    safe_name = "".join(c if c.isalnum() or c in "._- " else "_" for c in name).strip() or "custom"
+    safe_name = (
+        "".join(c if c.isalnum() or c in "._- " else "_" for c in name).strip()
+        or "custom"
+    )
     path = os.path.join(user_dir, f"{safe_name}.toml")
     doc = tomlkit.document()
     doc.add("colors", colors)

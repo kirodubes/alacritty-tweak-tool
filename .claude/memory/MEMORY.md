@@ -15,7 +15,7 @@
 - [Widget Naming Convention](feedback_widget_naming.md) — No hbox1/hbox2/vbox3; use descriptive names; update ALL references before renaming self.* attributes
 - [UI Naming Convention — Page vs Tab](feedback_ui_naming_convention.md) — Page = sidebar entry; Tab = sub-section inside a page
 - [Dev Mode Silence](feedback_dev_mode_silence.md) — never mention --dev mode in UI text, logs, or conversation; hidden means hidden
-- [Auto-Fix All Flake8 Issues](feedback_flake8_auto_fix.md) — Answer yes to all flake8 violations automatically; never ask permission
+- [Auto-Fix All Ruff Issues](feedback_flake8_auto_fix.md) — Run ruff check and fix all violations automatically; never ask permission
 - [Docstring Rule — PEP 257](feedback_docstring_rule.md) — public functions get one-line docstring; private (_prefixed) don't require them
 - [Section Dividers Kept](feedback_section_dividers.md) — # ── Name ── dividers kept in long functions (50+ lines) only
 - [User Handles All Commits](feedback_user_commits.md) — Claude commits and pushes automatically after every approved change

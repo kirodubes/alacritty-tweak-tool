@@ -1,4 +1,5 @@
 """TOML config read, write, and backup for alacritty-tweak-tool."""
+
 import json
 import os
 import shutil
@@ -87,7 +88,9 @@ def apply_appearance(font_family, font_size, opacity):
         doc.add("window", tomlkit.table())
     doc["window"]["opacity"] = round(opacity, 2)
     write_config(doc)
-    log.log_success(f"Appearance applied: font={font_family} size={font_size} opacity={opacity}")
+    log.log_success(
+        f"Appearance applied: font={font_family} size={font_size} opacity={opacity}"
+    )
 
 
 def apply_scrolling(history, multiplier):
@@ -130,8 +133,10 @@ def apply_cursor_full(shape, blink, thickness, blink_timeout, unfocused_hollow):
     doc["cursor"]["blink_timeout"] = blink_timeout
     doc["cursor"]["unfocused_hollow"] = unfocused_hollow
     write_config(doc)
-    log.log_success(f"Cursor applied: shape={shape} blink={blink} thickness={thickness} "
-                    f"blink_timeout={blink_timeout} hollow={unfocused_hollow}")
+    log.log_success(
+        f"Cursor applied: shape={shape} blink={blink} thickness={thickness} "
+        f"blink_timeout={blink_timeout} hollow={unfocused_hollow}"
+    )
 
 
 def apply_font_offset(x, y):
@@ -159,8 +164,10 @@ def apply_window_style(decorations, dynamic_title, startup_mode, blur):
     doc["window"]["startup_mode"] = startup_mode
     doc["window"]["blur"] = blur
     write_config(doc)
-    log.log_success(f"Window style applied: decorations={decorations} dynamic_title={dynamic_title} "
-                    f"startup_mode={startup_mode} blur={blur}")
+    log.log_success(
+        f"Window style applied: decorations={decorations} dynamic_title={dynamic_title} "
+        f"startup_mode={startup_mode} blur={blur}"
+    )
 
 
 def apply_behavior(save_to_clipboard, hide_when_typing, live_config_reload):
@@ -177,8 +184,10 @@ def apply_behavior(save_to_clipboard, hide_when_typing, live_config_reload):
         doc.add("general", tomlkit.table())
     doc["general"]["live_config_reload"] = live_config_reload
     write_config(doc)
-    log.log_success(f"Behavior applied: save_to_clipboard={save_to_clipboard} "
-                    f"hide_when_typing={hide_when_typing} live_config_reload={live_config_reload}")
+    log.log_success(
+        f"Behavior applied: save_to_clipboard={save_to_clipboard} "
+        f"hide_when_typing={hide_when_typing} live_config_reload={live_config_reload}"
+    )
 
 
 def get_current_font():

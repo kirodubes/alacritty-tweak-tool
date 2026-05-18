@@ -1,4 +1,5 @@
 """Colored console logging and debug helpers for alacritty-tweak-tool."""
+
 import sys
 import time
 

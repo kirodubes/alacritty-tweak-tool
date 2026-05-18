@@ -1,4 +1,5 @@
 """GTK4 GUI for alacritty-tweak-tool — three-tab Notebook interface."""
+
 import json
 import os
 import shutil
@@ -7,12 +8,14 @@ import threading
 from datetime import date
 
 import gi
+
 gi.require_version("Gtk", "4.0")
 from gi.repository import Gdk, GLib, Gtk, Pango  # noqa: E402
 
 try:
-    gi.require_version('Vte', '3.91')
+    gi.require_version("Vte", "3.91")
     from gi.repository import Vte
+
     _VTE_AVAILABLE = True
 except (ImportError, ValueError, Exception):
     _VTE_AVAILABLE = False
@@ -28,6 +31,7 @@ _creator_btns = None
 
 
 # ── Helpers ────────────────────────────────────────────────────────────────────
+
 
 def _label(text, css_class=None, markup=False):
     """Create a Gtk.Label with optional CSS class or markup."""
@@ -77,10 +81,14 @@ def _get_fonts(mono_only=False):
         if mono_only:
             result = subprocess.run(
                 ["fc-list", ":spacing=100", "family"],
-                capture_output=True, text=True, timeout=5,
+                capture_output=True,
+                text=True,
+                timeout=5,
             )
         else:
-            result = subprocess.run(["fc-list", ":", "family"], capture_output=True, text=True, timeout=5)
+            result = subprocess.run(
+                ["fc-list", ":", "family"], capture_output=True, text=True, timeout=5
+            )
         fonts = set()
         for line in result.stdout.splitlines():
             family = line.split(",")[0].strip()
@@ -127,17 +135,32 @@ def _spawn_in_vte(vte):
     fully settled and the PTY column count matches the widget width before fastfetch
     reads it. PRIORITY_LOW (300) runs after all GTK resize/layout events (priority 0).
     """
+
     def _on_realize(_w):
         def _do_spawn():
-            argv = ["bash", "-c", "fastfetch; exec bash"] if shutil.which("fastfetch") else ["bash"]
+            argv = (
+                ["bash", "-c", "fastfetch; exec bash"]
+                if shutil.which("fastfetch")
+                else ["bash"]
+            )
             vte.set_input_enabled(False)
             vte.spawn_async(
-                Vte.PtyFlags.DEFAULT, None, argv, None,
+                Vte.PtyFlags.DEFAULT,
+                None,
+                argv,
+                None,
                 GLib.SpawnFlags.SEARCH_PATH,
-                None, None, -1, None, None, None,
+                None,
+                None,
+                -1,
+                None,
+                None,
+                None,
             )
             return False
+
         GLib.timeout_add(200, _do_spawn)
+
     vte.connect("realize", _on_realize)
 
 
@@ -178,6 +201,7 @@ def _build_vte_panel(label_text):
 
 # ── Build entry point ──────────────────────────────────────────────────────────
 
+
 def build(window, version="1.0.0"):
     """Build and attach the full GUI to the given Gtk.ApplicationWindow."""
     root = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
@@ -210,10 +234,14 @@ def build(window, version="1.0.0"):
     notebook.set_vexpand(True)
 
     notebook.append_page(_build_themes_tab(window), Gtk.Label(label="  Themes  "))
-    notebook.append_page(_build_appearance_tab(window), Gtk.Label(label="  Appearance  "))
+    notebook.append_page(
+        _build_appearance_tab(window), Gtk.Label(label="  Appearance  ")
+    )
     notebook.append_page(_build_advanced_tab(window), Gtk.Label(label="  Advanced  "))
     notebook.append_page(_build_behavior_tab(window), Gtk.Label(label="  Behavior  "))
-    notebook.append_page(_build_creator_tab(window, notebook), Gtk.Label(label="  Creator  "))
+    notebook.append_page(
+        _build_creator_tab(window, notebook), Gtk.Label(label="  Creator  ")
+    )
     if log.DEV:
         notebook.append_page(_build_dev_tab(), Gtk.Label(label="  Dev  "))
 
@@ -224,6 +252,7 @@ def build(window, version="1.0.0"):
 
 
 # ── Tab 1: Themes ──────────────────────────────────────────────────────────────
+
 
 def _build_themes_tab(window):
     """Return the Themes tab with source dropdown, search bar, ListBox, and action buttons."""
@@ -236,7 +265,7 @@ def _build_themes_tab(window):
     info_lbl = _label(
         "Applying a theme overwrites colors currently managed by ohmychadwm-menu. "
         "A backup is saved to alacritty.toml-bak before every write.",
-        css_class="info-label"
+        css_class="info-label",
     )
     info_lbl.set_wrap(True)
     info_lbl.set_margin_bottom(4)
@@ -274,7 +303,7 @@ def _build_themes_tab(window):
     # Mutable containers so closures can update them after async load.
     current_source = [""]
     search_text = [""]
-    tone_filter = ["all"]   # "all" | "dark" | "light"
+    tone_filter = ["all"]  # "all" | "dark" | "light"
     source_labels = []
 
     # ── Split: theme list (left, fixed) | detail panel (right) ───────────────
@@ -322,11 +351,13 @@ def _build_themes_tab(window):
 
     def _save_prefs():
         prefs = cfg.load_prefs()
-        prefs.update({
-            "source": current_source[0],
-            "search": search_text[0],
-            "tone": tone_filter[0],
-        })
+        prefs.update(
+            {
+                "source": current_source[0],
+                "search": search_text[0],
+                "tone": tone_filter[0],
+            }
+        )
         cfg.save_prefs(prefs)
 
     def on_source_changed(_drop, _param):
@@ -359,7 +390,9 @@ def _build_themes_tab(window):
 
     # ── Detail panel: VTE terminal (right) ───────────────────────────────────
     global _vte_themes
-    detail_box, detail_name_lbl, vte_terminal = _build_vte_panel("Select a theme from the list")
+    detail_box, detail_name_lbl, vte_terminal = _build_vte_panel(
+        "Select a theme from the list"
+    )
     _vte_themes = vte_terminal
 
     btn_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
@@ -407,7 +440,9 @@ def _build_themes_tab(window):
     selected_source = [None]
 
     def _update_export_btn():
-        btn_export.set_sensitive(selected_colors[0] is not None and bool(export_entry.get_text().strip()))
+        btn_export.set_sensitive(
+            selected_colors[0] is not None and bool(export_entry.get_text().strip())
+        )
 
     def _user_theme_path(name):
         return os.path.join(themes.USER_THEMES_BASE, "user", f"{name}.toml")
@@ -429,20 +464,25 @@ def _build_themes_tab(window):
         if _vte_creator is not None:
             _apply_vte_colors(_vte_creator, row.theme_colors)
         if _creator_btns is not None:
-            for section, keys in (("primary", ("background", "foreground")),
-                                  ("cursor", ("text", "cursor"))):
+            for section, keys in (
+                ("primary", ("background", "foreground")),
+                ("cursor", ("text", "cursor")),
+            ):
                 for key in keys:
                     if key in row.theme_colors.get(section, {}):
                         _creator_btns[f"{section}.{key}"].set_rgba(
-                            _hex_to_rgba(str(row.theme_colors[section][key])))
+                            _hex_to_rgba(str(row.theme_colors[section][key]))
+                        )
             for section in ("normal", "bright"):
                 for name in _ANSI_NAMES:
                     if name in row.theme_colors.get(section, {}):
                         _creator_btns[f"{section}.{name}"].set_rgba(
-                            _hex_to_rgba(str(row.theme_colors[section][name])))
+                            _hex_to_rgba(str(row.theme_colors[section][name]))
+                        )
         btn_apply.set_sensitive(True)
         btn_delete.set_sensitive(
-            row.source_label == "My Themes" and os.path.isfile(_user_theme_path(row.theme_name))
+            row.source_label == "My Themes"
+            and os.path.isfile(_user_theme_path(row.theme_name))
         )
         _update_export_btn()
         status_lbl.set_label("")
@@ -461,8 +501,10 @@ def _build_themes_tab(window):
         cfg.save_prefs(prefs)
         log.log_success(f"Theme applied: {name}")
         if hasattr(window, "_current_theme_lbl") and window._current_theme_lbl:
-            GLib.idle_add(window._current_theme_lbl.set_markup,
-                          f"<b>Current theme</b>  {GLib.markup_escape_text(name)}")
+            GLib.idle_add(
+                window._current_theme_lbl.set_markup,
+                f"<b>Current theme</b>  {GLib.markup_escape_text(name)}",
+            )
         status_lbl.set_label("Theme applied. Restart Alacritty to see changes.")
 
     def on_undo(_widget):
@@ -477,7 +519,7 @@ def _build_themes_tab(window):
             return
         themes.export_theme(name, selected_colors[0])
         status_lbl.set_label(f"Saved '{name}' — reloading…")
-        while (child := listbox.get_first_child()):
+        while child := listbox.get_first_child():
             listbox.remove(child)
         window._theme_loading_lbl.set_label("Reloading…")
         threading.Thread(target=_load_themes_async, args=(window,), daemon=True).start()
@@ -499,7 +541,7 @@ def _build_themes_tab(window):
             status_lbl.set_label("Delete failed — check permissions.")
             return
         btn_delete.set_sensitive(False)
-        while (child := listbox.get_first_child()):
+        while child := listbox.get_first_child():
             listbox.remove(child)
         window._theme_loading_lbl.set_label("Reloading…")
         threading.Thread(target=_load_themes_async, args=(window,), daemon=True).start()
@@ -511,7 +553,9 @@ def _build_themes_tab(window):
 
     loading_lbl = _label("Loading themes…")
     hbox_loading = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=0)
-    lbl_credits = _label("Themes by their respective authors & communities", css_class="dim-label")
+    lbl_credits = _label(
+        "Themes by their respective authors & communities", css_class="dim-label"
+    )
     lbl_credits.set_hexpand(True)
     lbl_credits.set_xalign(1.0)
     hbox_loading.append(loading_lbl)
@@ -574,7 +618,9 @@ def _populate_theme_list(window, by_source):
     labels = list(by_source.keys())
     total_count = sum(len(by_source[lbl]) for lbl in labels)
     all_display = f"All Themes  ·  {total_count}"
-    display_labels = [all_display] + [f"{lbl}  ·  {len(by_source[lbl])}" for lbl in labels]
+    display_labels = [all_display] + [
+        f"{lbl}  ·  {len(by_source[lbl])}" for lbl in labels
+    ]
 
     # Populate source_labels before updating model to avoid a stale read in on_source_changed.
     # Index 0 is the sentinel "" meaning "show all sources".
@@ -649,6 +695,7 @@ def _populate_theme_list(window, by_source):
 
 # ── Tab 2: Appearance ──────────────────────────────────────────────────────────
 
+
 def _build_appearance_tab(window):
     """Return the Appearance tab with font and opacity controls."""
     outer = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
@@ -691,7 +738,9 @@ def _build_appearance_tab(window):
     font_drop = Gtk.DropDown.new(Gtk.StringList.new(["Loading…"]), None)
     font_drop.set_hexpand(True)
     font_drop.set_enable_search(True)
-    font_drop.set_expression(Gtk.PropertyExpression.new(Gtk.StringObject, None, "string"))
+    font_drop.set_expression(
+        Gtk.PropertyExpression.new(Gtk.StringObject, None, "string")
+    )
     font_drop.set_sensitive(False)
 
     grid.attach(font_lbl, 0, 0, 1, 1)
@@ -736,7 +785,9 @@ def _build_appearance_tab(window):
     window_grid.set_margin_top(8)
 
     current_opacity = cfg.get_current_opacity()
-    current_decorations, current_dynamic_title, current_startup_mode, current_blur = cfg.get_current_window_style()
+    current_decorations, current_dynamic_title, current_startup_mode, current_blur = (
+        cfg.get_current_window_style()
+    )
 
     opacity_lbl = _label("Opacity")
     opacity_scale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0.1, 1.0, 0.05)
@@ -811,8 +862,14 @@ def _build_appearance_tab(window):
     def _update_vte_font(*_):
         idx = font_drop.get_selected()
         model = font_drop.get_model()
-        family = model.get_string(idx) if model and idx < model.get_n_items() else current_family
-        font_desc = Pango.FontDescription.from_string(f"{family} {size_spin.get_value():.1f}")
+        family = (
+            model.get_string(idx)
+            if model and idx < model.get_n_items()
+            else current_family
+        )
+        font_desc = Pango.FontDescription.from_string(
+            f"{family} {size_spin.get_value():.1f}"
+        )
         if vte_preview is not None:
             vte_preview.set_font(font_desc)
         if _vte_themes is not None:
@@ -826,7 +883,11 @@ def _build_appearance_tab(window):
     def on_apply_appearance(_widget):
         idx = font_drop.get_selected()
         model = font_drop.get_model()
-        family = model.get_string(idx) if model and idx < model.get_n_items() else "monospace"
+        family = (
+            model.get_string(idx)
+            if model and idx < model.get_n_items()
+            else "monospace"
+        )
         size = size_spin.get_value()
         opacity = opacity_scale.get_value()
         cfg.apply_appearance(family, size, opacity)
@@ -834,9 +895,13 @@ def _build_appearance_tab(window):
         dec = decorations_list[dec_idx] if dec_idx < len(decorations_list) else "Full"
         sm_idx = startup_drop.get_selected()
         sm = startup_list[sm_idx] if sm_idx < len(startup_list) else "Windowed"
-        cfg.apply_window_style(dec, dynamic_title_switch.get_active(), sm, blur_switch.get_active())
+        cfg.apply_window_style(
+            dec, dynamic_title_switch.get_active(), sm, blur_switch.get_active()
+        )
         if vte_preview is not None:
-            vte_preview.set_font(Pango.FontDescription.from_string(f"{family} {size:.1f}"))
+            vte_preview.set_font(
+                Pango.FontDescription.from_string(f"{family} {size:.1f}")
+            )
 
     def on_reset_appearance(_widget):
         active_fonts = mono_fonts[0] if mono_switch.get_active() else all_fonts[0]
@@ -845,7 +910,9 @@ def _build_appearance_tab(window):
             font_drop.set_selected(active_fonts.index(default_family))
         size_spin.set_value(cfg.DEFAULTS["font_size"])
         opacity_scale.set_value(cfg.DEFAULTS["opacity"])
-        decorations_drop.set_selected(decorations_list.index(cfg.DEFAULTS["decorations"]))
+        decorations_drop.set_selected(
+            decorations_list.index(cfg.DEFAULTS["decorations"])
+        )
         startup_drop.set_selected(startup_list.index(cfg.DEFAULTS["startup_mode"]))
         dynamic_title_switch.set_active(cfg.DEFAULTS["dynamic_title"])
         blur_switch.set_active(cfg.DEFAULTS["blur"])
@@ -875,6 +942,7 @@ def _build_appearance_tab(window):
 
 
 # ── Tab 3: Advanced ────────────────────────────────────────────────────────────
+
 
 def _build_advanced_tab(window):
     """Return the Advanced tab with scrolling, padding, cursor, and font spacing controls."""
@@ -906,7 +974,9 @@ def _build_advanced_tab(window):
     # High values work but consume RAM proportionally.
     scroll_spin = Gtk.SpinButton.new_with_range(0, 999999, 1000)
     scroll_spin.set_value(current_scrollback)
-    scroll_note = _label("Max ~1 million lines. There is no true unlimited.", css_class="info-label")
+    scroll_note = _label(
+        "Max ~1 million lines. There is no true unlimited.", css_class="info-label"
+    )
 
     multiplier_lbl = _label("Scroll speed (multiplier)")
     multiplier_spin = Gtk.SpinButton.new_with_range(1, 10, 1)
@@ -924,8 +994,12 @@ def _build_advanced_tab(window):
     status_scrolling = _label("")
 
     def on_apply_scrolling(_widget):
-        cfg.apply_scrolling(int(scroll_spin.get_value()), int(multiplier_spin.get_value()))
-        status_scrolling.set_label("Scrolling applied. Restart Alacritty to see changes.")
+        cfg.apply_scrolling(
+            int(scroll_spin.get_value()), int(multiplier_spin.get_value())
+        )
+        status_scrolling.set_label(
+            "Scrolling applied. Restart Alacritty to see changes."
+        )
 
     btn_reset_scrolling = Gtk.Button(label="Reset to defaults")
     btn_reset_scrolling.add_css_class("flat")
@@ -975,7 +1049,9 @@ def _build_advanced_tab(window):
     status_padding = _label("")
 
     def on_apply_padding(_widget):
-        cfg.apply_window_padding(int(pad_x_spin.get_value()), int(pad_y_spin.get_value()))
+        cfg.apply_window_padding(
+            int(pad_x_spin.get_value()), int(pad_y_spin.get_value())
+        )
         status_padding.set_label("Padding applied. Restart Alacritty to see changes.")
 
     btn_reset_padding = Gtk.Button(label="Reset to defaults")
@@ -1006,7 +1082,9 @@ def _build_advanced_tab(window):
     cursor_grid.set_margin_top(8)
 
     current_shape, current_blink = cfg.get_current_cursor()
-    current_thickness, current_blink_timeout, current_hollow = cfg.get_current_cursor_extras()
+    current_thickness, current_blink_timeout, current_hollow = (
+        cfg.get_current_cursor_extras()
+    )
     shapes = ["Block", "Beam", "Underline"]
 
     shape_lbl = _label("Shape")
@@ -1020,7 +1098,9 @@ def _build_advanced_tab(window):
     blink_switch.set_halign(Gtk.Align.START)
 
     thickness_lbl = _label("Thickness")
-    thickness_scale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0.0, 1.0, 0.05)
+    thickness_scale = Gtk.Scale.new_with_range(
+        Gtk.Orientation.HORIZONTAL, 0.0, 1.0, 0.05
+    )
     thickness_scale.set_value(current_thickness)
     thickness_scale.set_draw_value(True)
     thickness_scale.set_digits(2)
@@ -1056,7 +1136,8 @@ def _build_advanced_tab(window):
         selected = shape_drop.get_selected()
         shape = shapes[selected] if selected < len(shapes) else "Block"
         cfg.apply_cursor_full(
-            shape, blink_switch.get_active(),
+            shape,
+            blink_switch.get_active(),
             thickness_scale.get_value(),
             int(blink_timeout_spin.get_value()),
             hollow_switch.get_active(),
@@ -1117,7 +1198,9 @@ def _build_advanced_tab(window):
 
     def on_apply_font_offset(_widget):
         cfg.apply_font_offset(int(off_x_spin.get_value()), int(off_y_spin.get_value()))
-        status_font_offset.set_label("Font spacing applied. Restart Alacritty to see changes.")
+        status_font_offset.set_label(
+            "Font spacing applied. Restart Alacritty to see changes."
+        )
 
     btn_reset_font_offset = Gtk.Button(label="Reset to defaults")
     btn_reset_font_offset.add_css_class("flat")
@@ -1141,6 +1224,7 @@ def _build_advanced_tab(window):
 
 
 # ── Tab 4: Behavior ────────────────────────────────────────────────────────────
+
 
 def _build_behavior_tab(window):
     """Return the Behavior tab with selection, mouse, and general behavior controls."""
@@ -1208,7 +1292,9 @@ def _build_behavior_tab(window):
     status_lbl = _label("")
 
     def on_apply_behavior(_widget):
-        cfg.apply_behavior(save_switch.get_active(), hide_switch.get_active(), live_switch.get_active())
+        cfg.apply_behavior(
+            save_switch.get_active(), hide_switch.get_active(), live_switch.get_active()
+        )
         status_lbl.set_label("Behavior applied. Restart Alacritty to see changes.")
 
     btn_reset_behavior = Gtk.Button(label="Reset to defaults")
@@ -1234,9 +1320,11 @@ def _build_behavior_tab(window):
 
 # ── Tab 5: Creator ─────────────────────────────────────────────────────────────
 
+
 def _get_current_wallpaper():
     """Return (path, source_label) for the current wallpaper, or (None, None)."""
     import re
+
     variety_txt = os.path.expanduser("~/.config/variety/wallpaper/wallpaper.jpg.txt")
     if os.path.isfile(variety_txt):
         try:
@@ -1251,7 +1339,11 @@ def _get_current_wallpaper():
         try:
             with open(fehbg, "r", encoding="utf-8") as f:
                 content = f.read()
-            match = re.search(r"feh\s+.*?['\"]([^'\"]+\.(jpg|jpeg|png|webp|gif|bmp))['\"]", content, re.IGNORECASE)
+            match = re.search(
+                r"feh\s+.*?['\"]([^'\"]+\.(jpg|jpeg|png|webp|gif|bmp))['\"]",
+                content,
+                re.IGNORECASE,
+            )
             if match:
                 return match.group(1), "feh"
         except Exception:
@@ -1263,14 +1355,24 @@ _CREATOR_DEFAULTS = {
     "primary": {"background": "#1e1e2e", "foreground": "#cdd6f4"},
     "cursor": {"text": "#1e1e2e", "cursor": "#f5e0dc"},
     "normal": {
-        "black": "#45475a", "red": "#f38ba8", "green": "#a6e3a1",
-        "yellow": "#f9e2af", "blue": "#89b4fa", "magenta": "#f5c2e7",
-        "cyan": "#94e2d5", "white": "#bac2de",
+        "black": "#45475a",
+        "red": "#f38ba8",
+        "green": "#a6e3a1",
+        "yellow": "#f9e2af",
+        "blue": "#89b4fa",
+        "magenta": "#f5c2e7",
+        "cyan": "#94e2d5",
+        "white": "#bac2de",
     },
     "bright": {
-        "black": "#585b70", "red": "#f38ba8", "green": "#a6e3a1",
-        "yellow": "#f9e2af", "blue": "#89b4fa", "magenta": "#f5c2e7",
-        "cyan": "#94e2d5", "white": "#a6adc8",
+        "black": "#585b70",
+        "red": "#f38ba8",
+        "green": "#a6e3a1",
+        "yellow": "#f9e2af",
+        "blue": "#89b4fa",
+        "magenta": "#f5c2e7",
+        "cyan": "#94e2d5",
+        "white": "#a6adc8",
     },
 }
 
@@ -1293,7 +1395,9 @@ def _extract_colors_from_image(path):
     try:
         result = subprocess.run(
             ["convert", path, "+dither", "-colors", "16", "-unique-colors", "txt:-"],
-            capture_output=True, text=True, timeout=15,
+            capture_output=True,
+            text=True,
+            timeout=15,
         )
         hexcolors = []
         for line in result.stdout.splitlines():
@@ -1329,12 +1433,20 @@ def _extract_colors_from_image(path):
             def _dist(h):
                 d = abs(_hue(h) - target)
                 return min(d, 360 - d)
+
             return min(candidates, key=_dist)
 
         sorted_colors = sorted(set(hexcolors), key=_lum)
         mid = sorted_colors[1:-1] if len(sorted_colors) > 2 else sorted_colors
 
-        hue_targets = {"red": 0, "yellow": 60, "green": 120, "cyan": 180, "blue": 240, "magenta": 300}
+        hue_targets = {
+            "red": 0,
+            "yellow": 60,
+            "green": 120,
+            "cyan": 180,
+            "blue": 240,
+            "magenta": 300,
+        }
         ansi_normal, ansi_bright = {}, {}
         for name, target in hue_targets.items():
             color = _closest_by_hue(mid, target)
@@ -1343,8 +1455,12 @@ def _extract_colors_from_image(path):
             ansi_bright[name] = _closest_by_hue(brighter, target) if brighter else color
 
         ansi_normal["black"] = sorted_colors[0]
-        ansi_normal["white"] = sorted_colors[-2] if len(sorted_colors) > 1 else sorted_colors[-1]
-        ansi_bright["black"] = sorted_colors[1] if len(sorted_colors) > 1 else sorted_colors[0]
+        ansi_normal["white"] = (
+            sorted_colors[-2] if len(sorted_colors) > 1 else sorted_colors[-1]
+        )
+        ansi_bright["black"] = (
+            sorted_colors[1] if len(sorted_colors) > 1 else sorted_colors[0]
+        )
         ansi_bright["white"] = sorted_colors[-1]
 
         bg = sorted_colors[0]
@@ -1387,7 +1503,9 @@ def _build_creator_tab(window, notebook):
         current_wp, current_src = _get_current_wallpaper()
         if current_wp is None:
             btn_current.set_sensitive(False)
-            btn_current.set_tooltip_text("No current wallpaper found (Variety / ~/.fehbg)")
+            btn_current.set_tooltip_text(
+                "No current wallpaper found (Variety / ~/.fehbg)"
+            )
         else:
             lbl_wall_source.set_text(f"Detected via {current_src}")
         wall_box.append(wall_entry)
@@ -1505,10 +1623,20 @@ def _build_creator_tab(window, notebook):
     # ── Build colors dict from current button values ───────────────────────────
     def _read_colors():
         return {
-            "primary": {k: _rgba_to_hex(btns[f"primary.{k}"].get_rgba()) for k in ("background", "foreground")},
-            "cursor": {k: _rgba_to_hex(btns[f"cursor.{k}"].get_rgba()) for k in ("text", "cursor")},
-            "normal": {n: _rgba_to_hex(btns[f"normal.{n}"].get_rgba()) for n in _ANSI_NAMES},
-            "bright": {n: _rgba_to_hex(btns[f"bright.{n}"].get_rgba()) for n in _ANSI_NAMES},
+            "primary": {
+                k: _rgba_to_hex(btns[f"primary.{k}"].get_rgba())
+                for k in ("background", "foreground")
+            },
+            "cursor": {
+                k: _rgba_to_hex(btns[f"cursor.{k}"].get_rgba())
+                for k in ("text", "cursor")
+            },
+            "normal": {
+                n: _rgba_to_hex(btns[f"normal.{n}"].get_rgba()) for n in _ANSI_NAMES
+            },
+            "bright": {
+                n: _rgba_to_hex(btns[f"bright.{n}"].get_rgba()) for n in _ANSI_NAMES
+            },
         }
 
     # Live VTE update on any color change
@@ -1519,10 +1647,13 @@ def _build_creator_tab(window, notebook):
         btn.connect("color-set", _on_color_changed)
 
     if vte_terminal is not None:
-        vte_terminal.connect("realize", lambda _w: _apply_vte_colors(vte_terminal, _read_colors()))
+        vte_terminal.connect(
+            "realize", lambda _w: _apply_vte_colors(vte_terminal, _read_colors())
+        )
 
     # ── Wallpaper browse + extract ────────────────────────────────────────────
     if shutil.which("convert"):
+
         def _on_browse(_w):
             dialog = Gtk.FileChooserNative(
                 title="Select wallpaper image",
@@ -1558,17 +1689,25 @@ def _build_creator_tab(window, notebook):
                 def _apply_extracted():
                     btn_extract.set_sensitive(True)
                     if colors is None:
-                        status_lbl.set_text("Could not extract colors — check file path.")
+                        status_lbl.set_text(
+                            "Could not extract colors — check file path."
+                        )
                         return
-                    for section, keys in (("primary", ("background", "foreground")),
-                                          ("cursor", ("text", "cursor"))):
+                    for section, keys in (
+                        ("primary", ("background", "foreground")),
+                        ("cursor", ("text", "cursor")),
+                    ):
                         for key in keys:
                             if key in colors.get(section, {}):
-                                btns[f"{section}.{key}"].set_rgba(_hex_to_rgba(colors[section][key]))
+                                btns[f"{section}.{key}"].set_rgba(
+                                    _hex_to_rgba(colors[section][key])
+                                )
                     for section in ("normal", "bright"):
                         for name in _ANSI_NAMES:
                             if name in colors.get(section, {}):
-                                btns[f"{section}.{name}"].set_rgba(_hex_to_rgba(colors[section][name]))
+                                btns[f"{section}.{name}"].set_rgba(
+                                    _hex_to_rgba(colors[section][name])
+                                )
                     _apply_vte_colors(vte_terminal, _read_colors())
                     status_lbl.set_text("Colors extracted — tweak and save.")
                     log.log_success("Wallpaper colors extracted")
@@ -1602,7 +1741,7 @@ def _build_creator_tab(window, notebook):
         prefs = cfg.load_prefs()
         prefs["last_source"] = "My Themes"
         cfg.save_prefs(prefs)
-        while (child := window._theme_listbox.get_first_child()):
+        while child := window._theme_listbox.get_first_child():
             window._theme_listbox.remove(child)
         threading.Thread(target=_load_themes_async, args=(window,), daemon=True).start()
         GLib.timeout_add(300, lambda: notebook.set_current_page(0) or False)
@@ -1613,6 +1752,7 @@ def _build_creator_tab(window, notebook):
 
 
 # ── Tab 6: Dev (--dev only) ────────────────────────────────────────────────────
+
 
 def _build_dev_tab():
     """Return the Dev tab with theme source maintenance controls."""
@@ -1668,11 +1808,17 @@ def _build_dev_tab():
             btn.set_sensitive(False)
             btn.set_tooltip_text("Built-in source — edit manually")
         else:
+
             def _on_update(_w, path=source_json_path, cmd=update_cmd, lbl=lbl_last):
                 log.log_subsection(f"Updating theme source: {path}")
                 proc = subprocess.Popen(
-                    ["alacritty", "-e", "bash", "-c",
-                     f"{cmd}; echo; read -p 'Press Enter to close...'"],
+                    [
+                        "alacritty",
+                        "-e",
+                        "bash",
+                        "-c",
+                        f"{cmd}; echo; read -p 'Press Enter to close...'",
+                    ],
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE,
                 )
