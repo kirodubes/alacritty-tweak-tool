@@ -97,7 +97,7 @@ configure_git() {
     fi
     git config --global push.default simple
 
-    if [[ "${SCRIPT_DIR}" == */EDU*/* ]]; then
+    if [[ "${SCRIPT_DIR}" == */EDU*/* || "${SCRIPT_DIR}" == */DATA*/* ]]; then
         log_info "https://github.com/erikdubois/${project}"
         git -C "${SCRIPT_DIR}" config --local user.name "Erik Dubois"
         git -C "${SCRIPT_DIR}" config --local user.email "erik.dubois@gmail.com"
