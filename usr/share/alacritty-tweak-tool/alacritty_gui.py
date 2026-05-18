@@ -1780,7 +1780,7 @@ def _build_creator_tab(window, notebook):
 
 
 def _build_dev_tab():
-    """Return the Dev tab with theme source maintenance controls."""
+    """Return the Dev tab with theme source maintenance controls backed by registry.json."""
     outer = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
     outer.set_margin_top(16)
     outer.set_margin_bottom(16)
@@ -1799,79 +1799,153 @@ def _build_dev_tab():
     lbl_section.set_margin_bottom(8)
     outer.append(lbl_section)
 
+    themes_base = themes.THEMES_BASE_DIR
+    app_base = themes.BASE_DIR
+    registry_path = os.path.join(themes_base, "registry.json")
+
+    try:
+        with open(registry_path, "r", encoding="utf-8") as f:
+            registry = json.load(f)
+    except Exception as e:
+        log.log_error(f"Could not load registry.json: {e}")
+        outer.append(
+            _label("registry.json missing or invalid — cannot display sources")
+        )
+        scroll = Gtk.ScrolledWindow()
+        scroll.set_vexpand(True)
+        scroll.set_child(outer)
+        return scroll
+
     grid = Gtk.Grid()
     grid.set_column_spacing(24)
     grid.set_row_spacing(8)
 
-    for col, text in enumerate(("Source", "Themes", "Added", "Last Checked", "")):
+    for col, text in enumerate(
+        ("Source", "Themes", "Added", "Last Checked", "Status", "")
+    ):
         h = Gtk.Label()
         h.set_markup(f"<b>{text}</b>")
         h.set_halign(Gtk.Align.START)
         grid.attach(h, col, 0, 1, 1)
 
-    themes_base = themes.THEMES_BASE_DIR
-    row_idx = 1
-    for entry in sorted(os.scandir(themes_base), key=lambda e: e.name):
-        if not entry.is_dir():
-            continue
-        source_json_path = os.path.join(entry.path, "source.json")
-        if not os.path.isfile(source_json_path):
-            continue
-        with open(source_json_path, "r", encoding="utf-8") as f:
-            meta = json.load(f)
+    for row_idx, entry in enumerate(
+        sorted(registry, key=lambda e: e.get("label", "").lower()), start=1
+    ):
+        dirname = entry.get("dirname", "")
+        source_json_path = os.path.join(themes_base, dirname, "source.json")
+        installed = os.path.isfile(source_json_path)
 
-        update_cmd = meta.get("update_command") or ""
-        lbl_last = _label(meta.get("last_checked") or "—")
+        if installed:
+            try:
+                with open(source_json_path, "r", encoding="utf-8") as f:
+                    meta = json.load(f)
+            except Exception:
+                meta = entry
+        else:
+            meta = entry
 
-        grid.attach(_label(meta.get("label", entry.name)), 0, row_idx, 1, 1)
-        grid.attach(_label(str(meta.get("theme_count", "?"))), 1, row_idx, 1, 1)
-        grid.attach(_label(meta.get("copied_date", "—")), 2, row_idx, 1, 1)
+        theme_count = str(meta.get("theme_count", "—"))
+        copied_date = meta.get("copied_date", "—") if installed else "—"
+        last_checked_val = (meta.get("last_checked") or "—") if installed else "—"
+
+        lbl_last = _label(last_checked_val)
+        lbl_status = _label("Installed" if installed else "Not installed")
+        lbl_status.add_css_class("dim-label" if not installed else "")
+
+        grid.attach(_label(entry.get("label", dirname)), 0, row_idx, 1, 1)
+        grid.attach(_label(theme_count), 1, row_idx, 1, 1)
+        grid.attach(_label(copied_date), 2, row_idx, 1, 1)
         grid.attach(lbl_last, 3, row_idx, 1, 1)
+        grid.attach(lbl_status, 4, row_idx, 1, 1)
 
-        btn = Gtk.Button(label="Update")
+        update_cmd = entry.get("update_command") or ""
+        btn = Gtk.Button(label="Update" if installed else "Install")
+
         if not update_cmd:
             btn.set_sensitive(False)
             btn.set_tooltip_text("Built-in source — edit manually")
         else:
 
-            def _on_update(_w, path=source_json_path, cmd=update_cmd, lbl=lbl_last):
-                log.log_subsection(f"Updating theme source: {path}")
+            def _on_action(
+                _w,
+                src_path=source_json_path,
+                cmd=update_cmd,
+                e=entry,
+                d=dirname,
+                base=app_base,
+                tb=themes_base,
+                lbl_l=lbl_last,
+                lbl_s=lbl_status,
+                b=btn,
+            ):
+                now_installed = os.path.isfile(src_path)
+                dest_dir = os.path.join(tb, d)
+                if now_installed:
+                    full_cmd = f"cd '{base}' && {cmd}"
+                    log.log_subsection(f"Updating: {e.get('label', d)}")
+                else:
+                    full_cmd = f"cd '{base}' && mkdir -p '{dest_dir}' && {cmd}"
+                    log.log_subsection(f"Installing: {e.get('label', d)}")
+
                 proc = subprocess.Popen(
                     [
                         "alacritty",
                         "-e",
                         "bash",
                         "-c",
-                        f"{cmd}; echo; read -p 'Press Enter to close...'",
+                        f"{full_cmd}; echo; read -p 'Press Enter to close...'",
                     ],
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE,
                 )
 
-                def _wait(p=proc, src=path, lbl_ref=lbl):
+                def _wait(
+                    p=proc,
+                    src=src_path,
+                    entry_=e,
+                    was_installed=now_installed,
+                    lbl_last_=lbl_l,
+                    lbl_status_=lbl_s,
+                    btn_=b,
+                ):
                     p.wait()
                     today = date.today().isoformat()
-                    try:
-                        with open(src, "r", encoding="utf-8") as f:
-                            data = json.load(f)
-                        data["last_checked"] = today
-                        with open(src, "w", encoding="utf-8") as f:
-                            json.dump(data, f, indent=2)
-                        log.log_success(f"last_checked updated: {today}")
-                    except Exception as e:
-                        log.log_error(f"Could not update last_checked: {e}")
-                    GLib.idle_add(lbl_ref.set_text, today)
+                    if was_installed:
+                        try:
+                            with open(src, "r", encoding="utf-8") as f:
+                                data = json.load(f)
+                            data["last_checked"] = today
+                            with open(src, "w", encoding="utf-8") as f:
+                                json.dump(data, f, indent=2)
+                            log.log_success(f"last_checked updated: {today}")
+                        except Exception as ex:
+                            log.log_error(f"Could not update last_checked: {ex}")
+                        GLib.idle_add(lbl_last_.set_text, today)
+                    else:
+                        source_data = {
+                            k: v for k, v in entry_.items() if k != "dirname"
+                        }
+                        source_data["copied_date"] = today
+                        source_data["last_checked"] = today
+                        try:
+                            with open(src, "w", encoding="utf-8") as f:
+                                json.dump(source_data, f, indent=2)
+                            log.log_success(f"Installed: {entry_.get('label', '')}")
+                        except Exception as ex:
+                            log.log_error(f"Could not write source.json: {ex}")
+                        GLib.idle_add(lbl_status_.set_text, "Installed")
+                        GLib.idle_add(lbl_status_.remove_css_class, "dim-label")
+                        GLib.idle_add(lbl_last_.set_text, today)
+                        GLib.idle_add(btn_.set_label, "Update")
 
                 threading.Thread(target=_wait, daemon=True).start()
 
-            btn.connect("clicked", _on_update)
-        grid.attach(btn, 4, row_idx, 1, 1)
-        row_idx += 1
+            btn.connect("clicked", _on_action)
+
+        grid.attach(btn, 5, row_idx, 1, 1)
 
     outer.append(grid)
     scroll = Gtk.ScrolledWindow()
     scroll.set_vexpand(True)
     scroll.set_child(outer)
     return scroll
-
-    return outer

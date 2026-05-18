@@ -1,0 +1,173 @@
+[
+  {
+    "dirname": "alacritty-themes",
+    "label": "alacritty-themes",
+    "type": "npm",
+    "source_path": "/usr/lib/node_modules/alacritty-themes/themes/",
+    "theme_count": 231,
+    "update_command": "cp /usr/lib/node_modules/alacritty-themes/themes/*.toml data/themes/alacritty-themes/",
+    "notes": "Install with: sudo npm install -g alacritty-themes"
+  },
+  {
+    "dirname": "aura",
+    "label": "Aura",
+    "type": "git",
+    "source_path": "https://github.com/daltonmenezes/aura-theme",
+    "theme_count": 1,
+    "update_command": "git clone --depth=1 https://github.com/daltonmenezes/aura-theme /tmp/aura && cp /tmp/aura/packages/alacritty/aura-theme.toml data/themes/aura/",
+    "notes": "Purple-toned dark theme"
+  },
+  {
+    "dirname": "bamboo",
+    "label": "Bamboo",
+    "type": "git",
+    "source_path": "https://github.com/ribru17/bamboo.nvim",
+    "theme_count": 3,
+    "update_command": "git clone --depth=1 https://github.com/ribru17/bamboo.nvim /tmp/bamboo && cp /tmp/bamboo/extras/alacritty/*.toml data/themes/bamboo/",
+    "notes": "3 variants: Bamboo (dark), Light, Multiplex (dark muted)"
+  },
+  {
+    "dirname": "bundled",
+    "label": "Bundled",
+    "type": "bundled",
+    "source_path": "data/themes/bundled/",
+    "theme_count": 12,
+    "update_command": null,
+    "notes": "Curated selection maintained by alacritty-tweak-tool. Edit manually."
+  },
+  {
+    "dirname": "catppuccin",
+    "label": "Catppuccin",
+    "type": "git",
+    "source_path": "https://github.com/catppuccin/alacritty",
+    "theme_count": 4,
+    "update_command": "git clone --depth=1 https://github.com/catppuccin/alacritty /tmp/catppuccin-alacritty && cp /tmp/catppuccin-alacritty/catppuccin-*.toml data/themes/catppuccin/",
+    "notes": "4 variants: Latte (light), Frappé, Macchiato, Mocha"
+  },
+  {
+    "dirname": "cyberdream",
+    "label": "Cyberdream",
+    "type": "git",
+    "source_path": "https://github.com/scottmckendry/cyberdream.nvim",
+    "theme_count": 2,
+    "update_command": "git clone --depth=1 https://github.com/scottmckendry/cyberdream.nvim /tmp/cyberdream && cp /tmp/cyberdream/extras/alacritty/*.toml data/themes/cyberdream/",
+    "notes": "2 variants: Dark, Light"
+  },
+  {
+    "dirname": "dracula",
+    "label": "Dracula",
+    "type": "git",
+    "source_path": "https://github.com/dracula/alacritty",
+    "theme_count": 1,
+    "update_command": "git clone --depth=1 https://github.com/dracula/alacritty /tmp/dracula-alacritty && cp /tmp/dracula-alacritty/dracula.toml data/themes/dracula/",
+    "notes": "Classic Dracula theme"
+  },
+  {
+    "dirname": "flexoki",
+    "label": "Flexoki",
+    "type": "git",
+    "source_path": "https://github.com/kepano/flexoki",
+    "theme_count": 2,
+    "update_command": "git clone --depth=1 https://github.com/kepano/flexoki /tmp/flexoki && cp /tmp/flexoki/alacritty/*.toml data/themes/flexoki/",
+    "notes": "2 variants: Dark, Light — warm ink-inspired palette"
+  },
+  {
+    "dirname": "kanagawa",
+    "label": "Kanagawa",
+    "type": "git",
+    "source_path": "https://github.com/rebelot/kanagawa.nvim",
+    "theme_count": 3,
+    "update_command": "git clone --depth=1 https://github.com/rebelot/kanagawa.nvim /tmp/kanagawa && cp /tmp/kanagawa/extras/alacritty/*.toml data/themes/kanagawa/",
+    "notes": "3 variants: Wave (dark), Dragon (darker), Lotus (light)"
+  },
+  {
+    "dirname": "melange",
+    "label": "Melange",
+    "type": "git",
+    "source_path": "https://github.com/savq/melange-nvim",
+    "theme_count": 2,
+    "update_command": "git clone --depth=1 https://github.com/savq/melange-nvim /tmp/melange && cp /tmp/melange/term/alacritty/*.toml data/themes/melange/",
+    "notes": "2 variants: Dark, Light — warm earthy palette"
+  },
+  {
+    "dirname": "moonfly",
+    "label": "Moonfly",
+    "type": "git",
+    "source_path": "https://github.com/bluz71/vim-moonfly-colors",
+    "theme_count": 1,
+    "update_command": "git clone --depth=1 https://github.com/bluz71/vim-moonfly-colors /tmp/moonfly && cp /tmp/moonfly/extras/moonfly-alacritty.toml data/themes/moonfly/moonfly.toml",
+    "notes": "Dark blue-grey theme"
+  },
+  {
+    "dirname": "nightfox",
+    "label": "Nightfox",
+    "type": "git",
+    "source_path": "https://github.com/EdenEast/nightfox.nvim",
+    "theme_count": 7,
+    "update_command": "git clone --depth=1 https://github.com/EdenEast/nightfox.nvim /tmp/nightfox && for v in carbonfox dawnfox dayfox duskfox nightfox nordfox terafox; do cp /tmp/nightfox/extra/$v/alacritty.toml data/themes/nightfox/$v.toml; done",
+    "notes": "7 variants: Nightfox, Dayfox, Dawnfox, Duskfox, Nordfox, Terafox, Carbonfox"
+  },
+  {
+    "dirname": "oh-lucy",
+    "label": "Oh Lucy",
+    "type": "git",
+    "source_path": "https://github.com/Yazeed1s/oh-lucy.nvim",
+    "theme_count": 1,
+    "update_command": "git clone --depth=1 https://github.com/Yazeed1s/oh-lucy.nvim /tmp/ohlucy && cp /tmp/ohlucy/terminal/alacritty/*.toml data/themes/oh-lucy/",
+    "notes": "Warm dark evening theme"
+  },
+  {
+    "dirname": "onedarkpro",
+    "label": "One Dark Pro",
+    "type": "git",
+    "source_path": "https://github.com/olimorris/onedarkpro.nvim",
+    "theme_count": 5,
+    "update_command": "git clone --depth=1 https://github.com/olimorris/onedarkpro.nvim /tmp/onedarkpro && cp /tmp/onedarkpro/extras/alacritty/*.toml data/themes/onedarkpro/",
+    "notes": "5 variants: One Dark, One Dark Dark, One Dark Vivid, One Light, Vaporwave"
+  },
+  {
+    "dirname": "rose-pine",
+    "label": "Rose Pine",
+    "type": "git",
+    "source_path": "https://github.com/rose-pine/alacritty",
+    "theme_count": 3,
+    "update_command": "git clone --depth=1 https://github.com/rose-pine/alacritty /tmp/rose-pine-alacritty && cp /tmp/rose-pine-alacritty/dist/*.toml data/themes/rose-pine/",
+    "notes": "3 variants: Rose Pine (main), Moon, Dawn (light)"
+  },
+  {
+    "dirname": "selenized",
+    "label": "Selenized",
+    "type": "git",
+    "source_path": "https://codeberg.org/Phosphenius/selenized",
+    "theme_count": 4,
+    "update_command": "git clone --depth=1 https://codeberg.org/Phosphenius/selenized /tmp/selenized-alacritty && cp /tmp/selenized-alacritty/terminals/alacritty/*.toml data/themes/selenized/",
+    "notes": "4 variants: Black, Dark, Light, White"
+  },
+  {
+    "dirname": "tempus",
+    "label": "Tempus",
+    "type": "git",
+    "source_path": "https://gitlab.com/protesilaos/tempus-themes-alacritty",
+    "theme_count": 16,
+    "update_command": "git clone --depth=1 https://gitlab.com/protesilaos/tempus-themes-alacritty.git /tmp/tempus-alacritty && cp /tmp/tempus-alacritty/*.toml data/themes/tempus/",
+    "notes": "16 variants: Autumn, Classic, Dawn, Day, Dusk, Fugit, Future, Night, Past, Rift, Spring, Summer, Tempest, Totus, Warp, Winter"
+  },
+  {
+    "dirname": "tokyo-night",
+    "label": "Tokyo Night",
+    "type": "git",
+    "source_path": "https://github.com/folke/tokyonight.nvim",
+    "theme_count": 4,
+    "update_command": "git clone --depth=1 https://github.com/folke/tokyonight.nvim /tmp/tokyonight && cp /tmp/tokyonight/extras/alacritty/*.toml data/themes/tokyo-night/",
+    "notes": "4 variants: Night, Storm, Moon, Day (light)"
+  },
+  {
+    "dirname": "vscode",
+    "label": "VSCode",
+    "type": "git",
+    "source_path": "https://github.com/Mofiqul/vscode.nvim",
+    "theme_count": 2,
+    "update_command": "git clone --depth=1 https://github.com/Mofiqul/vscode.nvim /tmp/vscode-nvim && cp /tmp/vscode-nvim/extra/alacritty/*.toml data/themes/vscode/",
+    "notes": "2 variants: Dark, Light"
+  }
+]
