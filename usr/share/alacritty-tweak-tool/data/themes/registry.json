@@ -76,7 +76,7 @@
     "label": "Kiro",
     "type": "bundled",
     "source_path": "data/themes/kiro/",
-    "theme_count": 1,
+    "theme_count": 2,
     "update_command": null,
     "notes": "Curated themes for the Kiro distro. Edit manually."
   },
