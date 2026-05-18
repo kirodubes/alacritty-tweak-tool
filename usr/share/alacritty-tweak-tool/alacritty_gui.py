@@ -2,6 +2,7 @@
 
 import json
 import os
+import signal
 import shutil
 import subprocess
 import threading
@@ -129,39 +130,63 @@ def _apply_vte_colors(vte, colors):
 
 
 def _spawn_in_vte(vte):
-    """Spawn fastfetch (then a shell) in vte after realize + a PRIORITY_LOW idle.
+    """Spawn fastfetch in vte; respawn when column count changes (e.g. window resize)."""
+    state = {"cols": 0, "pid": -1, "polling": False, "pending": 0}
 
-    The two-stage deferral (realize → low-priority idle) ensures GTK layout has
-    fully settled and the PTY column count matches the widget width before fastfetch
-    reads it. PRIORITY_LOW (300) runs after all GTK resize/layout events (priority 0).
-    """
+    def _on_spawn(_terminal, pid, error, _user_data):
+        if error is None:
+            state["pid"] = pid
 
-    def _on_realize(_w):
-        def _do_spawn():
-            argv = (
-                ["bash", "-c", "fastfetch; exec bash"]
-                if shutil.which("fastfetch")
-                else ["bash"]
-            )
-            vte.set_input_enabled(False)
-            vte.spawn_async(
-                Vte.PtyFlags.DEFAULT,
-                None,
-                argv,
-                None,
-                GLib.SpawnFlags.SEARCH_PATH,
-                None,
-                None,
-                -1,
-                None,
-                None,
-                None,
-            )
-            return False
+    def _do_spawn(cols):
+        state["cols"] = cols
+        if state["pid"] > 0:
+            try:
+                os.kill(state["pid"], signal.SIGTERM)
+            except OSError:
+                pass
+            state["pid"] = -1
+        vte.reset(True, True)
+        argv = (
+            ["bash", "-c", "clear; fastfetch; exec bash"]
+            if shutil.which("fastfetch")
+            else ["bash"]
+        )
+        # Strip COLUMNS so fastfetch reads PTY width via ioctl rather than
+        # inheriting the parent shell's value, which may not match the VTE size.
+        envv = [f"{k}={v}" for k, v in os.environ.items() if k != "COLUMNS"]
+        vte.set_input_enabled(False)
+        vte.spawn_async(
+            Vte.PtyFlags.DEFAULT,
+            None,
+            argv,
+            envv,
+            GLib.SpawnFlags.SEARCH_PATH,
+            None,
+            None,
+            -1,
+            None,
+            _on_spawn,
+            None,
+        )
 
-        GLib.timeout_add(200, _do_spawn)
+    def _poll():
+        if not vte.get_mapped():
+            return GLib.SOURCE_REMOVE
+        cols = vte.get_column_count()
+        if cols > 0 and cols != state["cols"]:
+            if cols == state["pending"]:
+                # Stable for two consecutive polls — safe to spawn.
+                _do_spawn(cols)
+            else:
+                state["pending"] = cols
+        return GLib.SOURCE_CONTINUE
 
-    vte.connect("realize", _on_realize)
+    def _on_map(_w):
+        if not state["polling"]:
+            state["polling"] = True
+            GLib.timeout_add(500, _poll)
+
+    vte.connect("map", _on_map)
 
 
 def _build_vte_panel(label_text):
