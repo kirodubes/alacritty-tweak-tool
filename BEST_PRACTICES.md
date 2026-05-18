@@ -1,5 +1,23 @@
 # Claude Best Practices
 
+## 2026-05-19 (session end — Startup-HQ)
+
+**Tip: In setup scripts, put all interactive prompts at the very top of `main()` — before any irreversible side effects**
+A user who answers "no" to the chroot prompt at step 12 has already sat through 11 steps of work that is now wasted. Move every interactive `read`-based prompt to the start of `main()`, in decision order. The script makes all decisions upfront, then executes without interruption. If a prompt is buried in a function that also does work (like `setup_archlinux_chroot`), keep the prompt logic at the top of that function and call the function first. Side effects that the user hasn't approved should never precede the approval.
+
+**Tip: Add a `preflight_checks()` as the first call in `main()` for any setup script — validate before touching anything**
+Check all hard dependencies before any side effects: required binaries present (`rsync`, `git`, `pacman`), required paths accessible, running user is not root (or is root, depending on the script). A preflight that fails prints exactly what is missing and exits 1. Without it, a missing binary causes a confusing mid-script failure after irreversible steps have already run. The function costs ten lines and prevents every "script blew up halfway through" scenario.
+
+
+
+## 2026-05-18 (session end — alacritty-tweak-tool, second session)
+
+**Tip: Disable Claude Code notification sounds with `"preferredNotifChannel": "notifications_disabled"` in `~/.claude/settings.json`**
+Claude Code emits OS notifications (and sometimes a terminal bell) when it finishes a task or needs input. On Arch Linux with Alacritty these land as sound alerts. Setting `"preferredNotifChannel": "notifications_disabled"` in `~/.claude/settings.json` turns off the notification channel entirely — no bell, no popup. Useful in focused work environments where the sound is distracting. To re-enable later, remove the key or set it to `"auto"`.
+
+**Tip: Design asset directories for zero-code extension — a metadata file per directory is all that's needed**
+When building a feature that has many interchangeable assets (themes, plugins, presets), make the discovery mechanism filesystem-driven: scan a parent directory, read a `source.json` (or equivalent) in each subdirectory, and build the runtime list from that. Adding a new source then costs zero Python changes — drop a new directory with `source.json` and the app finds it automatically. This session: the `data/themes/kiro/` Kiro theme group was fully wired up with just two TOML files and a `source.json`, no Python edits needed.
+
 ## 2026-05-18 (session end — alacritty-tweak-tool)
 
 **Tip: `notify::width` does NOT fire on GTK4 widgets — use a polling timer to detect VTE resize**
@@ -1218,3 +1236,11 @@ When you add a `_refresh_label(self)` helper to update a widget post-install, ca
 
 **Tip: Run `/simplify` after every multi-session feature addition, not just after large refactors**
 Code reuse gaps like init/refresh duplication accumulate silently across sessions: one session adds the `_refresh_*` helper, the next session writes the GUI init without knowing the helper exists. `/simplify` catches these in one pass by launching three agents in parallel (reuse, quality, efficiency). It's cheap on a clean working tree — the diff is small and the agents run fast. Treat it as a post-feature hygiene step, not an occasional deep-clean.
+
+## 2026-05-18 (session end arcolinux-nemesis)
+
+**Tip: Install `flake8` and `ruff` as system packages, not pip deps — they survive virtualenv resets and are always on PATH**
+Linting tools installed via pip into a virtualenv disappear the moment the env is recreated or switched. Installing them via pacman (`flake8`, `ruff`) makes them available system-wide for every project, every shell, every CI-equivalent manual run. For nemesis-based setups, add them to the core packages list in `110-install-core-software.sh` so they're guaranteed on any fresh Arch install. The rule: if you run a tool in every project, it belongs in the system package list, not per-project deps.
+
+**Tip: Curl-check new mirrorlist entries before committing — a dead mirror adds 3–5 second timeouts to every `pacman -Syu`**
+When adding mirrors to a mirrorlist manually, validate them first: `curl -s --max-time 3 -o /dev/null -w "%{http_code}" "https://new-mirror.example/$repo/os/$arch/core.db"` with `$repo=core $arch=x86_64`. A 2xx response means the mirror is live; anything else means skip it. Pacman tries every enabled mirror on timeout, so one dead entry multiplies the slowdown across every sync. A 5-second spot-check per new mirror pays for itself on the first `pacman -Syu`.

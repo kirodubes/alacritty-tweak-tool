@@ -15,3 +15,7 @@ Add a star toggle button on each theme row that persists a `favorites` list in `
 ### Per-Desktop-Environment Window Geometry — remember size separately for each DE
 
 Store `window_width`/`window_height` under a key derived from `$XDG_CURRENT_DESKTOP` (e.g. `"geometry_XFCE"`, `"geometry_i3"`). Implementation: read `os.environ.get("XDG_CURRENT_DESKTOP", "default")` at startup, use it as the prefs key prefix. Users who switch between XFCE, dwm, and a VM get the size they left it at in each environment rather than one shared value that fits none of them well.
+
+### Kiro Theme Auto-Sync — pull NotSoPale/OhSoPale colors live from the running alacritty.toml
+
+Since `~/.config/alacritty/alacritty.toml` is already parsed by the app, add an "Update from current config" button in the Kiro source row of the Dev tab. It reads the live `[colors]` block, converts `0x` hex to `#`, and overwrites `data/themes/kiro/NotSoPale.toml` in place. Rationale: ohmychadwm-menu manages alacritty colors dynamically — the bundled theme quickly drifts from what the user actually runs. One-click sync keeps the Kiro theme accurate without manual extraction.
