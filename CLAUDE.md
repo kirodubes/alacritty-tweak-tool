@@ -47,22 +47,22 @@ usr/share/alacritty-tweak-tool/
 
 ### Data Locations
 
-| What | Path |
-|------|------|
-| Alacritty config | `~/.config/alacritty/alacritty.toml` |
-| Config backup | `~/.config/alacritty/alacritty.toml-bak` |
-| App preferences | `~/.config/alacritty-tweak-tool/prefs.json` |
-| User themes | `~/.config/alacritty-tweak-tool/themes/user/` |
+| What             | Path                                          |
+|------------------|-----------------------------------------------|
+| Alacritty config | `~/.config/alacritty/alacritty.toml`          |
+| Config backup    | `~/.config/alacritty/alacritty.toml-bak`      |
+| App preferences  | `~/.config/alacritty-tweak-tool/prefs.json`   |
+| User themes      | `~/.config/alacritty-tweak-tool/themes/user/` |
 
 ### Module Responsibilities
 
-| Module | Purpose |
-|--------|---------|
-| `alacritty-tweak-tool.py` | `Gtk.Application` subclass; loads CSS; calls `gui_module.build()` |
-| `alacritty_config.py` | All TOML reads/writes; backup/restore; prefs persistence |
-| `alacritty_gui.py` | All GTK4 widgets: 5 tabs, VTE preview, font picker, color buttons |
-| `alacritty_themes.py` | `load_themes_by_source()`, `apply_theme()`, `export_theme()`, color utils |
-| `log.py` | `DEBUG` / `DEV` flags; `log_section`, `log_subsection`, `log_info`, `log_success`, `log_warn`, `log_error`, `log_timing` |
+| Module                    | Purpose                                                                                                                  |
+|---------------------------|--------------------------------------------------------------------------------------------------------------------------|
+| `alacritty-tweak-tool.py` | `Gtk.Application` subclass; loads CSS; calls `gui_module.build()`                                                        |
+| `alacritty_config.py`     | All TOML reads/writes; backup/restore; prefs persistence                                                                 |
+| `alacritty_gui.py`        | All GTK4 widgets: 5 tabs, VTE preview, font picker, color buttons                                                        |
+| `alacritty_themes.py`     | `load_themes_by_source()`, `apply_theme()`, `export_theme()`, color utils                                                |
+| `log.py`                  | `DEBUG` / `DEV` flags; `log_section`, `log_subsection`, `log_info`, `log_success`, `log_warn`, `log_error`, `log_timing` |
 
 ## Development Patterns
 
