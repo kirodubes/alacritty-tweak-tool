@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="kiro.jpg" alt="Kiro" width="220" />
+</p>
+
 # Alacritty Tweak Tool
 
 A GTK4 graphical configuration editor for the [Alacritty](https://alacritty.org/) terminal emulator.
