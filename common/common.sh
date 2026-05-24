@@ -684,7 +684,7 @@ write_arch_mirrorlist() {
 Backup exists here: /etc/pacman.d/mirrorlist-nemesis"
 
     sudo tee /etc/pacman.d/mirrorlist >/dev/null <<'EOF'
-## Best Arch Linux servers worldwide from arcolinux-nemesis
+## Best Arch Linux servers worldwide
 
 Server = https://mirror.osbeck.com/archlinux/$repo/os/$arch
 Server = https://mirror.rackspace.com/archlinux/$repo/os/$arch
