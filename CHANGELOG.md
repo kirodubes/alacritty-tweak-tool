@@ -1,5 +1,24 @@
 # Alacritty Tweak Tool — Changelog
 
+## 2026.06.13 - Remove dead AUR-pulling code from common.sh
+
+### What Changed
+
+- Stripped two dead functions from `common/common.sh` that pulled packages from the AUR: `install_aur_package()` and `install_sddm_git()`. Both were defined but had zero callers anywhere in the project, so this removes an unused AUR-install surface without affecting any feature.
+- Prompted by the [Arch AUR malicious-packages incident](https://archlinux.org/news/active-aur-malicious-packages-incident/) (2026-06-12): reducing the number of unattended `yay -S --noconfirm` / `paru -S --noconfirm` paths.
+
+### Technical Details
+
+- `install_aur_package()` (`yay`/`paru` with `--noconfirm`) was only ever called by `install_sddm_git()`, which itself was uncalled — removing both leaves no AUR-helper invocation in `common.sh`.
+- ATT's SDDM support is variant-agnostic (`check_package_installed("sddm") or check_package_installed("sddm-git")`), so `sddm-git` is not a requirement; stock `sddm` from the official repos works.
+- The `# 10. Download and AUR helpers` section header was renamed to `# 10. Download file`.
+- `replace_sddm_with_sddm_git_if_needed()` is also dead but was left in place — it routes through `install_packages` (`pacman -S`), not an AUR helper, so it is out of scope for this AUR cleanup.
+- `bash -n common/common.sh` passes; no remaining references to `install_aur_package`, `install_sddm_git`, `yay`, or `paru`.
+
+### Files Modified
+
+- `common/common.sh`
+
 ## 2026.05.18 - ruff formatting + VTE resize respawn + Theme Sources GUI in Dev tab + Kiro theme group
 
 ### What Changed

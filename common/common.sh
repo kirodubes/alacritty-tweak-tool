@@ -643,30 +643,7 @@ confirm_yes_no() {
 }
 
 ##################################################################################################################################
-# 10. Download and AUR helpers
-##################################################################################################################################
-install_aur_package() {
-    local pkg="$1"
-
-    if pkg_installed "${pkg}"; then
-        log_info "AUR package ${pkg} already installed"
-        return 0
-    fi
-
-    if command -v yay >/dev/null 2>&1; then
-        log_subsection "Installing AUR package ${pkg} with yay"
-        yay -S --noconfirm "${pkg}"
-    elif command -v paru >/dev/null 2>&1; then
-        log_subsection "Installing AUR package ${pkg} with paru"
-        paru -S --noconfirm "${pkg}"
-    else
-        log_warn "No AUR helper found (yay/paru)"
-        return 1
-    fi
-}
-
-##################################################################################################################################
-# Download file
+# 10. Download file
 ##################################################################################################################################
 download_file() {
     local url="$1"
@@ -802,17 +779,6 @@ disable_firewalld_stack() {
 
     disable_service firewalld
     remove_matching_packages firewall-applet firewall-config firewalld
-}
-
-install_sddm_git() {
-    log_subsection "Installing sddm-git"
-    install_aur_package sddm-git
-    enable_now_service sddm.service
-
-    echo
-    echo "SDDM has been installed and enabled."
-    echo "Please reboot later to start using the display manager."
-    echo
 }
 
 remove_gpsd() {
