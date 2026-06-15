@@ -1,5 +1,20 @@
 # Alacritty Tweak Tool — Changelog
 
+## 2026.06.15 - Localize the desktop entry
+
+### What Changed
+- Added a translated `Comment` and a real `GenericName` ("Terminal Configuration Tool") in 14
+  languages (de, fr, nl, es, it, pt_BR, pt, ru, pl, uk, zh_CN, ja, tr, cs). The brand `Name` and
+  technical `Keywords` stay English.
+
+### Technical Details
+- `usr/share/applications/alacritty-tweak-tool.desktop` — the redundant `GenericName=Alacritty Tweak Tool`
+  (a copy of `Name`) was replaced with the descriptive `GenericName` + its 14 `GenericName[xx]=` lines;
+  `Comment[xx]=` block added. `desktop-file-validate` clean (only the pre-existing Categories hint).
+
+### Files Modified
+- `usr/share/applications/alacritty-tweak-tool.desktop`
+
 ## 2026.06.13 - Remove dead AUR-pulling code from common.sh
 
 ### What Changed
