@@ -1,5 +1,26 @@
 # Alacritty Tweak Tool — Changelog
 
+## 2026.06.16 - UTF-8 / non-English locale hardening
+
+### What Changed
+- Ported the ArchLinux Tweak Tool startup UTF-8 guard so the app never crashes on a non-UTF-8
+  system locale (latin-1 `fr_BE`, etc.). On a UTF-8 locale (incl. `fr_FR.UTF-8`/`it_IT.UTF-8`/
+  `es_ES.UTF-8`) the guard is inert — the app was already robust there. Part of the ecosystem-wide
+  "UTF-8 robustness audit" across all Kiro GTK4 apps; ATT itself was already hardened.
+
+### Technical Details
+- `alacritty-tweak-tool.py`: two blocks at the top of the entry point. (1) Re-exec with `-X utf8` +
+  `PYTHONUTF8=1` only when `codecs.lookup(sys.getfilesystemencoding()).name != "utf-8"` — forces UTF-8
+  for stdout, `text=True` subprocess decoding and `open()` regardless of `LANG`; loop-safe. (2) When
+  the current locale is not UTF-8, fall back to `C.UTF-8` so spawned child output stays readable.
+  `codecs`/`os`/`sys` imports deduplicated into the guard; later imports carry `# noqa: E402`.
+- Verified: re-exec fires under `nl_BE.iso88591` → lands in `utf8_mode=1`; inert under `*.UTF-8` and
+  (PEP 540) under `C`/`POSIX`. ruff + `py_compile` clean. Audit found no English-string matching of
+  localized command output and no unescaped user data in Pango markup.
+
+### Files Modified
+- `usr/share/alacritty-tweak-tool/alacritty-tweak-tool.py`
+
 ## 2026.06.15 - Localize the desktop entry
 
 ### What Changed
