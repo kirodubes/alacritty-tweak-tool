@@ -1,5 +1,20 @@
 # Alacritty Tweak Tool — Changelog
 
+## 2026.06.27 - ♥ Support button in the header
+
+### What Changed
+- Added a pink **♥ Support** button to the header (between the version label and Quit),
+  matching fastfetch-tweak-tool and fish-tweak-tool. It opens a "Support Kiro" dialog
+  with the funding channels (GitHub Sponsors / Ko-fi / Patreon / YouTube / PayPal).
+- The version label now reads `alacritty v<version>` (was `v<version>`) for consistency
+  with the sibling tools.
+
+### Technical Details
+- `usr/share/alacritty-tweak-tool/alacritty_gui.py`: added the `btn_support` widget to the
+  header `hbox_title`, plus `_FUNDING`, `_open_url`, and `_show_support_dialog` (same layout
+  and channels as the sibling tweak tools).
+- `usr/share/alacritty-tweak-tool/att.css`: added the `.support-button` pink styling (`#e0567a`).
+
 ## 2026.06.16 - UTF-8 / non-English locale hardening
 
 ### What Changed

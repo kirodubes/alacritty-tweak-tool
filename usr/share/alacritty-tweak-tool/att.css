@@ -12,6 +12,14 @@ label.info-label {
     font-size: 11px;
 }
 
+.support-button {
+    color: #e0567a;
+}
+
+.support-button:hover {
+    background-color: alpha(#e0567a, 0.18);
+}
+
 label.detail-name {
     font-size: 14px;
 }

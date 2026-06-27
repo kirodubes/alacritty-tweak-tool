@@ -224,6 +224,59 @@ def _build_vte_panel(label_text):
     return box, lbl, vte
 
 
+# ── Support ──────────────────────────────────────────────────────────────────
+
+# Funding channels — GitHub Sponsors first (~100% payout). Keep in sync with
+# kiro-website .github/FUNDING.yml if those change.
+_FUNDING = [
+    ("GitHub Sponsors", "https://github.com/sponsors/erikdubois", "best value — almost all goes to the project"),
+    ("Ko-fi", "https://ko-fi.com/erikdubois", "buy a coffee — one-off tip"),
+    ("Patreon", "https://www.patreon.com/kiroproject", "membership tiers + perks"),
+    ("YouTube membership", "https://www.youtube.com/@ErikDubois/join", "join on YouTube"),
+    ("PayPal", "https://www.paypal.me/erikdubois", "direct one-off"),
+]
+
+
+def _open_url(parent, url):
+    Gtk.UriLauncher.new(url).launch(parent, None, None)
+
+
+def _show_support_dialog(window):
+    dlg = Gtk.Window(title="Support Kiro", transient_for=window, modal=True)
+    dlg.set_default_size(440, -1)
+    box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
+    for side in ("start", "end", "top", "bottom"):
+        getattr(box, f"set_margin_{side}")(18)
+
+    box.append(_label("<b>Support Kiro</b>", markup=True))
+    intro = _label(
+        "Kiro and its tools are built by one person, for the community — and kept free. "
+        "If Alacritty Tweak Tool saves you time, a little support keeps the work going. "
+        "Thank you for being here.",
+        css_class="info-label",
+    )
+    intro.set_wrap(True)
+    intro.set_max_width_chars(52)
+    box.append(intro)
+
+    for name, url, note in _FUNDING:
+        btn = Gtk.Button()
+        content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
+        content.append(_label(f"<b>{name}</b>", markup=True))
+        content.append(_label(note, css_class="info-label"))
+        btn.set_child(content)
+        btn.connect("clicked", lambda _w, u=url: _open_url(dlg, u))
+        box.append(btn)
+
+    close = Gtk.Button(label="Close")
+    close.set_halign(Gtk.Align.END)
+    close.connect("clicked", lambda _w: dlg.close())
+    box.append(close)
+
+    dlg.set_child(box)
+    dlg.present()
+
+
 # ── Build entry point ──────────────────────────────────────────────────────────
 
 
@@ -242,14 +295,20 @@ def build(window, version="1.0.0"):
     title.set_name("title")
     title.set_hexpand(True)
 
-    lbl_version = _label(f"v{version}", css_class="info-label")
+    lbl_version = _label(f"alacritty v{version}", css_class="info-label")
     lbl_version.set_valign(Gtk.Align.CENTER)
+
+    btn_support = Gtk.Button(label="♥ Support")
+    btn_support.set_tooltip_text("Support Kiro's development")
+    btn_support.add_css_class("support-button")
+    btn_support.connect("clicked", lambda _w: _show_support_dialog(window))
 
     btn_quit = Gtk.Button(label="Quit")
     btn_quit.connect("clicked", lambda _w: window.close())
 
     hbox_title.append(title)
     hbox_title.append(lbl_version)
+    hbox_title.append(btn_support)
     hbox_title.append(btn_quit)
     root.append(hbox_title)
     root.append(_separator())
