@@ -1,5 +1,12 @@
 # Alacritty Tweak Tool — Changelog
 
+## 2026.06.29
+
+### Added to the new "Kiro Apps" menu
+- Appended `X-Kiro-Apps;` to `usr/share/applications/alacritty-tweak-tool.desktop` so
+  it appears in the new Kiro Apps launcher folder. Non-destructive — still shows under
+  Settings/System.
+
 ## 2026.06.27 - ♥ Support button in the header
 
 ### What Changed
