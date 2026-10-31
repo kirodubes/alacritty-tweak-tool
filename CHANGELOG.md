@@ -1,5 +1,30 @@
 # Alacritty Tweak Tool — Changelog
 
+## 2026.10.31 — gettext translations
+
+### What Changed
+- Added a header language selector and translated the application interface into 13 languages, with English as the
+  fallback. The selected language is saved and takes effect after restarting the app.
+
+### Technical Details
+- Added the `alacritty-tweak-tool` gettext domain, language detection with `pt` → `pt_BR` and `zh` → `zh_CN`
+  sibling fallbacks, and the `ALTT_LANGUAGE` test pin.
+- Translated display labels without changing their underlying Alacritty config values; theme counts use plural-aware
+  messages.
+- Added catalog extraction/compile and desktop-entry generation from `po/alacritty-tweak-tool.desktop.in`. The old
+  hand-written `GenericName[xx]`/`Comment[xx]` lines were removed from the template: the catalogs now translate
+  GenericName, Comment and Keywords for all 13 languages (they produced duplicate keys next to the generated ones).
+- Translations drafted by GitHub Copilot (GPT-6 Luna), reviewed by a second AI (29 findings, 26 taken); German and
+  Russian windows checked off-screen.
+
+### Files Modified
+- `.codespellrc`, `README.md`, `CLAUDE.md`, `CHANGELOG.md`
+- `po/` (template, build script, language list, and 13 catalogs)
+- `usr/share/alacritty-tweak-tool/alacritty_i18n.py`
+- `usr/share/alacritty-tweak-tool/alacritty-tweak-tool.py`
+- `usr/share/alacritty-tweak-tool/alacritty_gui.py`
+- `usr/share/applications/alacritty-tweak-tool.desktop`
+
 ## 2026.10.25
 
 ### What Changed

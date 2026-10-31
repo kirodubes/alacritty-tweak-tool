@@ -1,0 +1,701 @@
+# Spanish translations for alacritty-tweak-tool package.
+# Copyright (C) 2026 THE alacritty-tweak-tool'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the alacritty-tweak-tool package.
+# Automatically generated, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: alacritty-tweak-tool\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-31 14:43+0100\n"
+"PO-Revision-Date: 2026-10-31 14:10+0100\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: Spanish\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: usr/share/alacritty-tweak-tool/alacritty-tweak-tool.py:74
+#: po/alacritty-tweak-tool.desktop.in:2
+msgid "Alacritty Tweak Tool"
+msgstr "Alacritty Tweak Tool"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:37
+msgid "Background"
+msgstr "Fondo"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:38
+msgid "Foreground"
+msgstr "Primer plano"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:39
+msgid "Text"
+msgstr "Texto"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:40
+msgid "Cursor"
+msgstr "Cursor"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:41
+msgid "Black"
+msgstr "Negro"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:42
+msgid "Red"
+msgstr "Rojo"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:43
+msgid "Green"
+msgstr "Verde"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:44
+msgid "Yellow"
+msgstr "Amarillo"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:45
+msgid "Blue"
+msgstr "Azul"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:46
+msgid "Magenta"
+msgstr "Magenta"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:47
+msgid "Cyan"
+msgstr "Cian"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:48
+msgid "White"
+msgstr "Blanco"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:230
+msgid "Terminal preview unavailable — install vte4"
+msgstr "Vista previa del terminal no disponible. Instala vte4"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:254
+msgid "best value — almost all goes to the project"
+msgstr "la mejor opción: casi todo va al proyecto"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:255
+msgid "buy a coffee — one-off tip"
+msgstr "invita a un café: una propina única"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:256
+msgid "membership tiers + perks"
+msgstr "niveles de membresía con ventajas"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:257
+msgid "YouTube membership"
+msgstr "Membresía de YouTube"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:257
+msgid "join on YouTube"
+msgstr "hazte miembro en YouTube"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:258
+msgid "direct one-off"
+msgstr "donación directa, una sola vez"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:267
+msgid "Support Kiro"
+msgstr "Apoya a Kiro"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:273
+msgid "<b>Support Kiro</b>"
+msgstr "<b>Apoya a Kiro</b>"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:275
+msgid ""
+"Kiro and its tools are built by one person, for the community — and kept "
+"free. If Alacritty Tweak Tool saves you time, a little support keeps the "
+"work going. Thank you for being here."
+msgstr ""
+"Una sola persona desarrolla Kiro y sus herramientas para la comunidad, y "
+"mantiene todo gratis. Si Alacritty Tweak Tool te ahorra tiempo, un pequeño "
+"apoyo ayuda a que el proyecto siga adelante. Gracias por estar aquí."
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:293
+msgid "Close"
+msgstr "Cerrar"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:305
+#, python-brace-format
+msgid "System ({language})"
+msgstr "Sistema ({language})"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:308
+msgid "Language"
+msgstr "Idioma"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:313
+msgid "Restart now"
+msgstr "Reiniciar ahora"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:320
+msgid "Saved. The app shows the new language when it starts again."
+msgstr ""
+"Guardado. La app mostrará el nuevo idioma la próxima vez que se inicie."
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:356
+msgid "♥ Support"
+msgstr "♥ Apoyar"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:357
+msgid "Support Kiro's development"
+msgstr "Apoyar el desarrollo de Kiro"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:361
+msgid "Quit"
+msgstr "Salir"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:378
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1957
+msgid "Themes"
+msgstr "Temas"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:380
+msgid "Appearance"
+msgstr "Apariencia"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:382
+msgid "Advanced"
+msgstr "Avanzado"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:383
+msgid "Behavior"
+msgstr "Comportamiento"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:385
+msgid "Creator"
+msgstr "Creador"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:388
+msgid "Dev"
+msgstr "Desarrollo"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:409
+msgid ""
+"Applying a theme overwrites colors currently managed by ohmychadwm-menu. A "
+"backup is saved to alacritty.toml-bak before every write."
+msgstr ""
+"Al aplicar un tema se sobrescriben los colores que gestiona ohmychadwm-menu. "
+"Antes de cada escritura, se guarda una copia de seguridad en alacritty.toml-"
+"bak."
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:421
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:892
+msgid "Loading…"
+msgstr "Cargando…"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:425
+msgid "Filter by name…"
+msgstr "Filtrar por nombre…"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:430
+msgid "All"
+msgstr "Todos"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:432
+msgid "Dark"
+msgstr "Oscuro"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:434
+msgid "Light"
+msgstr "Claro"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:537
+msgid "Select a theme from the list"
+msgstr "Selecciona un tema de la lista"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:546
+msgid "Apply Theme"
+msgstr "Aplicar tema"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:549
+msgid "Undo Last Apply"
+msgstr "Deshacer la última aplicación"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:550
+msgid "Delete Theme"
+msgstr "Eliminar tema"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:553
+msgid "Only available for My Themes"
+msgstr "Solo disponible para Mis temas"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:564
+msgid "Save selection as…"
+msgstr "Guardar selección como…"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:566
+msgid "Export"
+msgstr "Exportar"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:597
+msgid "<b>Select a theme from the list</b>"
+msgstr "<b>Selecciona un tema de la lista</b>"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:649
+#, python-brace-format
+msgid "<b>Current theme</b>  {name}"
+msgstr "<b>Tema actual</b>  {name}"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:651
+msgid "Theme applied. Restart Alacritty to see changes."
+msgstr "Tema aplicado. Reinicia Alacritty para ver los cambios."
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:655
+msgid "No backup found."
+msgstr "No se encontró ninguna copia de seguridad."
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:655
+msgid "Restored from backup."
+msgstr "Restaurado desde la copia de seguridad."
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:664
+#, python-brace-format
+msgid "Saved “{name}” — reloading…"
+msgstr "Se guardó “{name}”. Recargando…"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:667
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:689
+msgid "Reloading…"
+msgstr "Recargando…"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:676
+msgid "File not found — already deleted?"
+msgstr "No se encontró el archivo. ¿Ya lo eliminaste?"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:681
+#, python-brace-format
+msgid "Deleted “{name}”"
+msgstr "Se eliminó “{name}”"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:684
+msgid "Delete failed — check permissions."
+msgstr "No se pudo eliminar. Comprueba los permisos."
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:697
+msgid "Loading themes…"
+msgstr "Cargando temas…"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:700
+msgid "Themes by their respective authors & communities"
+msgstr "Temas de sus respectivos autores y comunidades"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:752
+msgid "My Themes"
+msgstr "Mis temas"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:767
+#, python-brace-format
+msgid "All Themes · {count} theme"
+msgid_plural "All Themes · {count} themes"
+msgstr[0] "Todos los temas · {count} tema"
+msgstr[1] "Todos los temas · {count} temas"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:771
+#, python-brace-format
+msgid "{source} · {count} theme"
+msgid_plural "{source} · {count} themes"
+msgstr[0] "{source} · {count} tema"
+msgstr[1] "{source} · {count} temas"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:829
+msgid "<b>Current theme</b>"
+msgstr "<b>Tema actual</b>"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:844
+#, python-brace-format
+msgid "{count} theme loaded"
+msgid_plural "{count} themes loaded"
+msgstr[0] "Se cargó {count} tema"
+msgstr[1] "Se cargaron {count} temas"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:877
+msgid "<b>Font</b>"
+msgstr "<b>Fuente</b>"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:890
+msgid "Family"
+msgstr "Familia"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:903
+msgid "Monospace only"
+msgstr "Solo monoespaciada"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:924
+msgid "Size"
+msgstr "Tamaño"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:933
+msgid "<b>Window</b>"
+msgstr "<b>Ventana</b>"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:946
+msgid "Opacity"
+msgstr "Opacidad"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:955
+msgid "Buttonless"
+msgstr "Sin botones"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:955
+msgid "Full"
+msgstr "Completa"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:955
+msgid "None"
+msgstr "Ninguna"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:955
+msgid "Transparent"
+msgstr "Transparente"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:956
+msgid "Decorations"
+msgstr "Decoraciones"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:964
+msgid "Fullscreen"
+msgstr "Pantalla completa"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:964
+msgid "Maximized"
+msgstr "Maximizada"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:964
+msgid "Simple fullscreen"
+msgstr "Pantalla completa simple"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:964
+msgid "Windowed"
+msgstr "En ventana"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:965
+msgid "Startup mode"
+msgstr "Modo de inicio"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:970
+msgid "Dynamic title"
+msgstr "Título dinámico"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:975
+msgid "Background blur"
+msgstr "Desenfoque del fondo"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:980
+msgid "Apply and relaunch Alacritty to see the effect"
+msgstr "Aplica los cambios y vuelve a iniciar Alacritty para ver el efecto"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:998
+msgid "Apply Appearance"
+msgstr "Aplicar apariencia"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1001
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1162
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1215
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1305
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1363
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1458
+msgid "Reset to defaults"
+msgstr "Restablecer valores predeterminados"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1015
+msgid "Font Preview"
+msgstr "Vista previa de fuente"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1119
+msgid "<b>Scrolling</b>"
+msgstr "<b>Desplazamiento</b>"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1130
+msgid "History (lines)"
+msgstr "Historial (líneas)"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1136
+msgid "Max ~1 million lines. There is no true unlimited."
+msgstr "Máximo: ~1 millón de líneas. No existe un valor realmente ilimitado."
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1139
+msgid "Scroll speed (multiplier)"
+msgstr "Velocidad de desplazamiento (multiplicador)"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1150
+msgid "Apply Scrolling"
+msgstr "Aplicar desplazamiento"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1159
+msgid "Scrolling applied. Restart Alacritty to see changes."
+msgstr "Desplazamiento aplicado. Reinicia Alacritty para ver los cambios."
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1181
+msgid "<b>Window Padding</b>"
+msgstr "<b>Relleno de la ventana</b>"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1191
+msgid "Horizontal (px)"
+msgstr "Horizontal (px)"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1195
+msgid "Vertical (px)"
+msgstr "Vertical (px)"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1205
+msgid "Apply Padding"
+msgstr "Aplicar relleno"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1213
+msgid "Padding applied. Restart Alacritty to see changes."
+msgstr "Relleno aplicado. Reinicia Alacritty para ver los cambios."
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1234
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1718
+msgid "<b>Cursor</b>"
+msgstr "<b>Cursor</b>"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1246
+msgid "Beam"
+msgstr "Barra"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1246
+msgid "Block"
+msgstr "Bloque"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1246
+msgid "Underline"
+msgstr "Subrayado"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1248
+msgid "Shape"
+msgstr "Forma"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1253
+msgid "Blink"
+msgstr "Parpadeo"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1258
+msgid "Thickness"
+msgstr "Grosor"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1268
+msgid "Blink timeout (s, 0 = never stop)"
+msgstr "Tiempo de espera del parpadeo (s, 0 = nunca se detiene)"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1272
+msgid "Hollow when unfocused"
+msgstr "Hueco cuando no está enfocado"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1289
+msgid "Apply Cursor"
+msgstr "Aplicar cursor"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1303
+msgid "Cursor applied. Restart Alacritty to see changes."
+msgstr "Cursor aplicado. Reinicia Alacritty para ver los cambios."
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1329
+msgid "<b>Font Spacing</b>"
+msgstr "<b>Espaciado de fuente</b>"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1339
+msgid "Char spacing (offset.x)"
+msgstr "Espaciado entre caracteres (offset.x)"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1343
+msgid "Line spacing (offset.y)"
+msgstr "Espaciado entre líneas (offset.y)"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1353
+msgid "Apply Font Spacing"
+msgstr "Aplicar espaciado de fuente"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1360
+msgid "Font spacing applied. Restart Alacritty to see changes."
+msgstr "Espaciado de fuente aplicado. Reinicia Alacritty para ver los cambios."
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1397
+msgid "<b>Selection</b>"
+msgstr "<b>Selección</b>"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1405
+msgid "Copy on select"
+msgstr "Copiar al seleccionar"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1414
+msgid "<b>Mouse</b>"
+msgstr "<b>Ratón</b>"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1422
+msgid "Hide when typing"
+msgstr "Ocultar al escribir"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1431
+msgid "<b>General</b>"
+msgstr "<b>General</b>"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1439
+msgid "Live config reload"
+msgstr "Recarga de configuración en tiempo real"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1448
+msgid "Apply Behavior"
+msgstr "Aplicar comportamiento"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1456
+msgid "Behavior applied. Restart Alacritty to see changes."
+msgstr "Comportamiento aplicado. Reinicia Alacritty para ver los cambios."
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1652
+msgid "Wallpaper:"
+msgstr "Fondo de pantalla:"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1654
+msgid "Select an image to extract colors…"
+msgstr "Selecciona una imagen para extraer sus colores…"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1656
+msgid "Browse"
+msgstr "Examinar"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1657
+msgid "Current Wallpaper"
+msgstr "Fondo de pantalla actual"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1658
+msgid "Extract Colors"
+msgstr "Extraer colores"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1665
+msgid "No current wallpaper found (Variety / ~/.fehbg)"
+msgstr "No se encontró ningún fondo de pantalla actual (Variety / ~/.fehbg)"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1668
+#, python-brace-format
+msgid "Detected via {source}"
+msgstr "Detectado mediante {source}"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1704
+msgid "<b>Primary</b>"
+msgstr "<b>Principal</b>"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1732
+msgid "<b>Colors</b>"
+msgstr "<b>Colores</b>"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1739
+msgid "<b>Normal</b>"
+msgstr "<b>Normales</b>"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1741
+msgid "<b>Bright</b>"
+msgstr "<b>Brillantes</b>"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1759
+msgid "Theme name…"
+msgstr "Nombre del tema…"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1761
+msgid "Save Theme"
+msgstr "Guardar tema"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1775
+msgid "Color Preview"
+msgstr "Vista previa de colores"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1817
+msgid "Select wallpaper image"
+msgstr "Selecciona la imagen del fondo de pantalla"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1822
+msgid "Images"
+msgstr "Imágenes"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1842
+msgid "Extracting colors…"
+msgstr "Extrayendo colores…"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1851
+msgid "Could not extract colors — check file path."
+msgstr "No se pudieron extraer los colores. Comprueba la ruta del archivo."
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1870
+msgid "Colors extracted — tweak and save."
+msgstr "Colores extraídos. Ajústalos y guarda."
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1883
+#, python-brace-format
+msgid "Wallpaper source: {source}"
+msgstr "Origen del fondo de pantalla: {source}"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1893
+msgid "Enter a theme name first."
+msgstr "Primero, escribe un nombre para el tema."
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1897
+msgid "Saved — switching to Themes tab…"
+msgstr "Guardado. Cambiando a la pestaña Temas…"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1923
+msgid "Developer Tools"
+msgstr "Herramientas para desarrolladores"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1929
+msgid "<b>Theme Sources</b>"
+msgstr "<b>Fuentes de temas</b>"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1945
+msgid "registry.json missing or invalid — cannot display sources"
+msgstr "Falta registry.json o no es válido. No se pueden mostrar las fuentes"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1957
+msgid "Added"
+msgstr "Añadido"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1957
+msgid "Last Checked"
+msgstr "Última comprobación"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1957
+msgid "Source"
+msgstr "Fuente"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1957
+msgid "Status"
+msgstr "Estado"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1985
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:2069
+msgid "Installed"
+msgstr "Instalado"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1985
+msgid "Not installed"
+msgstr "No instalado"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1995
+msgid "Install"
+msgstr "Instalar"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1995
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:2072
+msgid "Update"
+msgstr "Actualizar"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1999
+msgid "Built-in source — edit manually"
+msgstr "Fuente integrada. Edita manualmente"
+
+#: po/alacritty-tweak-tool.desktop.in:3
+msgid "Terminal Configuration Tool"
+msgstr "Herramienta de configuración de terminal"
+
+#: po/alacritty-tweak-tool.desktop.in:5
+msgid "Configure Alacritty terminal — themes, fonts, and behavior"
+msgstr "Configura el terminal Alacritty: temas, fuentes y comportamiento"
+
+#: po/alacritty-tweak-tool.desktop.in:11
+msgid "alacritty;terminal;theme;color;font;tweak"
+msgstr "alacritty;terminal;theme;color;font;tweak;terminal;tema;color;fuente;ajustar"

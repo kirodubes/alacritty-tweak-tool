@@ -5,6 +5,7 @@ import os
 import signal
 import shutil
 import subprocess
+import sys
 import threading
 from datetime import date
 
@@ -22,13 +23,30 @@ except (ImportError, ValueError, Exception):
     _VTE_AVAILABLE = False
 
 import alacritty_config as cfg  # noqa: E402
+import alacritty_i18n as i18n  # noqa: E402
 import alacritty_themes as themes  # noqa: E402
 import log  # noqa: E402
+from alacritty_i18n import N_, _, ngettext  # noqa: E402
 
 _vte_themes = None
 _vte_appearance = None
 _vte_creator = None
 _creator_btns = None
+
+_COLOR_LABELS = {
+    "background": N_("Background"),
+    "foreground": N_("Foreground"),
+    "text": N_("Text"),
+    "cursor": N_("Cursor"),
+    "black": N_("Black"),
+    "red": N_("Red"),
+    "green": N_("Green"),
+    "yellow": N_("Yellow"),
+    "blue": N_("Blue"),
+    "magenta": N_("Magenta"),
+    "cyan": N_("Cyan"),
+    "white": N_("White"),
+}
 
 
 # ── Helpers ────────────────────────────────────────────────────────────────────
@@ -49,6 +67,10 @@ def _label(text, css_class=None, markup=False):
 
 def _separator():
     return Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
+
+
+def _color_label(name):
+    return _(_COLOR_LABELS[name])
 
 
 def _make_swatch_area(rgb_rows, width, height):
@@ -205,7 +227,7 @@ def _build_vte_panel(label_text):
     box.append(lbl)
 
     if not _VTE_AVAILABLE:
-        placeholder = _label("Terminal preview unavailable — install vte4")
+        placeholder = _label(_("Terminal preview unavailable — install vte4"))
         placeholder.set_vexpand(True)
         placeholder.set_valign(Gtk.Align.CENTER)
         placeholder.set_xalign(0.5)
@@ -229,11 +251,11 @@ def _build_vte_panel(label_text):
 # Funding channels — GitHub Sponsors first (~100% payout). Keep in sync with
 # kiro-website .github/FUNDING.yml if those change.
 _FUNDING = [
-    ("GitHub Sponsors", "https://github.com/sponsors/erikdubois", "best value — almost all goes to the project"),
-    ("Ko-fi", "https://ko-fi.com/erikdubois", "buy a coffee — one-off tip"),
-    ("Patreon", "https://www.patreon.com/kiroproject", "membership tiers + perks"),
-    ("YouTube membership", "https://www.youtube.com/@ErikDubois/join", "join on YouTube"),
-    ("PayPal", "https://www.paypal.me/erikdubois", "direct one-off"),
+    ("GitHub Sponsors", "https://github.com/sponsors/erikdubois", _("best value — almost all goes to the project")),
+    ("Ko-fi", "https://ko-fi.com/erikdubois", _("buy a coffee — one-off tip")),
+    ("Patreon", "https://www.patreon.com/kiroproject", _("membership tiers + perks")),
+    (_("YouTube membership"), "https://www.youtube.com/@ErikDubois/join", _("join on YouTube")),
+    ("PayPal", "https://www.paypal.me/erikdubois", _("direct one-off")),
 ]
 
 
@@ -242,17 +264,17 @@ def _open_url(parent, url):
 
 
 def _show_support_dialog(window):
-    dlg = Gtk.Window(title="Support Kiro", transient_for=window, modal=True)
+    dlg = Gtk.Window(title=_("Support Kiro"), transient_for=window, modal=True)
     dlg.set_default_size(440, -1)
     box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
     for side in ("start", "end", "top", "bottom"):
         getattr(box, f"set_margin_{side}")(18)
 
-    box.append(_label("<b>Support Kiro</b>", markup=True))
+    box.append(_label(_("<b>Support Kiro</b>"), markup=True))
     intro = _label(
-        "Kiro and its tools are built by one person, for the community — and kept free. "
+        _("Kiro and its tools are built by one person, for the community — and kept free. "
         "If Alacritty Tweak Tool saves you time, a little support keeps the work going. "
-        "Thank you for being here.",
+        "Thank you for being here."),
         css_class="info-label",
     )
     intro.set_wrap(True)
@@ -268,13 +290,46 @@ def _show_support_dialog(window):
         btn.connect("clicked", lambda _w, u=url: _open_url(dlg, u))
         box.append(btn)
 
-    close = Gtk.Button(label="Close")
+    close = Gtk.Button(label=_("Close"))
     close.set_halign(Gtk.Align.END)
     close.connect("clicked", lambda _w: dlg.close())
     box.append(close)
 
     dlg.set_child(box)
     dlg.present()
+
+
+def _language_controls():
+    """Build a language selector and restart button for the header row."""
+    codes = [None, *i18n.available()]
+    labels = [_("System ({language})").format(language=i18n.name(i18n.SYSTEM))]
+    labels.extend(i18n.name(code) for code in codes[1:])
+    dropdown = Gtk.DropDown.new_from_strings(labels)
+    dropdown.set_tooltip_text(_("Language"))
+    dropdown.set_selected(codes.index(i18n.chosen()))
+
+    note = _label("")
+    note.set_visible(False)
+    restart = Gtk.Button(label=_("Restart now"), visible=False)
+
+    def on_language_changed(_dropdown, _pspec):
+        code = codes[dropdown.get_selected()]
+        i18n.save_choice(code)
+        changed = (code or i18n.SYSTEM) != (i18n.ACTIVE or i18n.SYSTEM)
+        note.set_text(
+            _("Saved. The app shows the new language when it starts again.") if changed else ""
+        )
+        note.set_visible(changed)
+        restart.set_visible(changed)
+
+    def on_restart(_widget):
+        argv = [sys.executable, os.path.abspath(sys.argv[0]), *sys.argv[1:]]
+        i18n.restore_environment()
+        os.execv(sys.executable, argv)
+
+    dropdown.connect("notify::selected", on_language_changed)
+    restart.connect("clicked", on_restart)
+    return dropdown, note, restart
 
 
 # ── Build entry point ──────────────────────────────────────────────────────────
@@ -298,16 +353,19 @@ def build(window, version="1.0.0"):
     lbl_version = _label(f"alacritty v{version}", css_class="info-label")
     lbl_version.set_valign(Gtk.Align.CENTER)
 
-    btn_support = Gtk.Button(label="♥ Support")
-    btn_support.set_tooltip_text("Support Kiro's development")
+    btn_support = Gtk.Button(label=_("♥ Support"))
+    btn_support.set_tooltip_text(_("Support Kiro's development"))
     btn_support.add_css_class("support-button")
     btn_support.connect("clicked", lambda _w: _show_support_dialog(window))
 
-    btn_quit = Gtk.Button(label="Quit")
+    btn_quit = Gtk.Button(label=_("Quit"))
     btn_quit.connect("clicked", lambda _w: window.close())
+    language_dropdown, language_note, btn_restart = _language_controls()
 
     hbox_title.append(title)
     hbox_title.append(lbl_version)
+    hbox_title.append(language_dropdown)
+    hbox_title.append(btn_restart)
     hbox_title.append(btn_support)
     hbox_title.append(btn_quit)
     root.append(hbox_title)
@@ -317,18 +375,19 @@ def build(window, version="1.0.0"):
     notebook.set_margin_top(10)
     notebook.set_vexpand(True)
 
-    notebook.append_page(_build_themes_tab(window), Gtk.Label(label="  Themes  "))
+    notebook.append_page(_build_themes_tab(window), Gtk.Label(label=_("Themes")))
     notebook.append_page(
-        _build_appearance_tab(window), Gtk.Label(label="  Appearance  ")
+        _build_appearance_tab(window), Gtk.Label(label=_("Appearance"))
     )
-    notebook.append_page(_build_advanced_tab(window), Gtk.Label(label="  Advanced  "))
-    notebook.append_page(_build_behavior_tab(window), Gtk.Label(label="  Behavior  "))
+    notebook.append_page(_build_advanced_tab(window), Gtk.Label(label=_("Advanced")))
+    notebook.append_page(_build_behavior_tab(window), Gtk.Label(label=_("Behavior")))
     notebook.append_page(
-        _build_creator_tab(window, notebook), Gtk.Label(label="  Creator  ")
+        _build_creator_tab(window, notebook), Gtk.Label(label=_("Creator"))
     )
     if log.DEV:
-        notebook.append_page(_build_dev_tab(), Gtk.Label(label="  Dev  "))
+        notebook.append_page(_build_dev_tab(), Gtk.Label(label=_("Dev")))
 
+    root.append(language_note)
     root.append(notebook)
     window.set_child(root)
 
@@ -347,8 +406,8 @@ def _build_themes_tab(window):
     outer.set_margin_end(6)
 
     info_lbl = _label(
-        "Applying a theme overwrites colors currently managed by ohmychadwm-menu. "
-        "A backup is saved to alacritty.toml-bak before every write.",
+        _("Applying a theme overwrites colors currently managed by ohmychadwm-menu. "
+        "A backup is saved to alacritty.toml-bak before every write."),
         css_class="info-label",
     )
     info_lbl.set_wrap(True)
@@ -359,20 +418,20 @@ def _build_themes_tab(window):
     controls_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
     controls_box.set_margin_bottom(4)
 
-    source_drop = Gtk.DropDown.new(Gtk.StringList.new(["Loading…"]), None)
+    source_drop = Gtk.DropDown.new(Gtk.StringList.new([_("Loading…")]), None)
     source_drop.set_size_request(220, -1)
 
     search_entry = Gtk.SearchEntry()
-    search_entry.set_placeholder_text("Filter by name…")
+    search_entry.set_placeholder_text(_("Filter by name…"))
     search_entry.set_hexpand(True)
 
     tone_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=0)
     tone_box.add_css_class("linked")
-    btn_tone_all = Gtk.ToggleButton(label="All")
+    btn_tone_all = Gtk.ToggleButton(label=_("All"))
     btn_tone_all.set_active(True)
-    btn_tone_dark = Gtk.ToggleButton(label="Dark")
+    btn_tone_dark = Gtk.ToggleButton(label=_("Dark"))
     btn_tone_dark.set_group(btn_tone_all)
-    btn_tone_light = Gtk.ToggleButton(label="Light")
+    btn_tone_light = Gtk.ToggleButton(label=_("Light"))
     btn_tone_light.set_group(btn_tone_all)
     tone_box.append(btn_tone_all)
     tone_box.append(btn_tone_dark)
@@ -475,7 +534,7 @@ def _build_themes_tab(window):
     # ── Detail panel: VTE terminal (right) ───────────────────────────────────
     global _vte_themes
     detail_box, detail_name_lbl, vte_terminal = _build_vte_panel(
-        "Select a theme from the list"
+        _("Select a theme from the list")
     )
     _vte_themes = vte_terminal
 
@@ -484,14 +543,14 @@ def _build_themes_tab(window):
     btn_row.set_margin_bottom(4)
     btn_row.set_margin_start(6)
     btn_row.set_margin_end(6)
-    btn_apply = Gtk.Button(label="Apply Theme")
+    btn_apply = Gtk.Button(label=_("Apply Theme"))
     btn_apply.add_css_class("suggested-action")
     btn_apply.set_sensitive(False)
-    btn_undo = Gtk.Button(label="Undo Last Apply")
-    btn_delete = Gtk.Button(label="Delete Theme")
+    btn_undo = Gtk.Button(label=_("Undo Last Apply"))
+    btn_delete = Gtk.Button(label=_("Delete Theme"))
     btn_delete.add_css_class("destructive-action")
     btn_delete.set_sensitive(False)
-    btn_delete.set_tooltip_text("Only available for My Themes")
+    btn_delete.set_tooltip_text(_("Only available for My Themes"))
     btn_row.append(btn_apply)
     btn_row.append(btn_undo)
     btn_row.append(btn_delete)
@@ -502,9 +561,9 @@ def _build_themes_tab(window):
     export_box.set_margin_start(6)
     export_box.set_margin_end(6)
     export_entry = Gtk.Entry()
-    export_entry.set_placeholder_text("Save selection as…")
+    export_entry.set_placeholder_text(_("Save selection as…"))
     export_entry.set_hexpand(True)
-    btn_export = Gtk.Button(label="Export")
+    btn_export = Gtk.Button(label=_("Export"))
     btn_export.set_sensitive(False)
     export_box.append(export_entry)
     export_box.append(btn_export)
@@ -535,7 +594,7 @@ def _build_themes_tab(window):
         if row is None:
             btn_apply.set_sensitive(False)
             btn_delete.set_sensitive(False)
-            detail_name_lbl.set_markup("<b>Select a theme from the list</b>")
+            detail_name_lbl.set_markup(_("<b>Select a theme from the list</b>"))
             _update_export_btn()
             return
         selected_colors[0] = row.theme_colors
@@ -587,13 +646,13 @@ def _build_themes_tab(window):
         if hasattr(window, "_current_theme_lbl") and window._current_theme_lbl:
             GLib.idle_add(
                 window._current_theme_lbl.set_markup,
-                f"<b>Current theme</b>  {GLib.markup_escape_text(name)}",
+                _("<b>Current theme</b>  {name}").format(name=GLib.markup_escape_text(name)),
             )
-        status_lbl.set_label("Theme applied. Restart Alacritty to see changes.")
+        status_lbl.set_label(_("Theme applied. Restart Alacritty to see changes."))
 
     def on_undo(_widget):
         ok = cfg.restore_backup()
-        status_lbl.set_label("Restored from backup." if ok else "No backup found.")
+        status_lbl.set_label(_("Restored from backup.") if ok else _("No backup found."))
 
     def on_export(_widget):
         if selected_colors[0] is None:
@@ -602,10 +661,10 @@ def _build_themes_tab(window):
         if not name:
             return
         themes.export_theme(name, selected_colors[0])
-        status_lbl.set_label(f"Saved '{name}' — reloading…")
+        status_lbl.set_label(_("Saved “{name}” — reloading…").format(name=name))
         while child := listbox.get_first_child():
             listbox.remove(child)
-        window._theme_loading_lbl.set_label("Reloading…")
+        window._theme_loading_lbl.set_label(_("Reloading…"))
         threading.Thread(target=_load_themes_async, args=(window,), daemon=True).start()
 
     def on_delete(_widget):
@@ -614,20 +673,20 @@ def _build_themes_tab(window):
             return
         path = _user_theme_path(name)
         if not os.path.isfile(path):
-            status_lbl.set_label("File not found — already deleted?")
+            status_lbl.set_label(_("File not found — already deleted?"))
             return
         try:
             os.remove(path)
             log.log_success(f"Deleted theme: {name}")
-            status_lbl.set_label(f"Deleted '{name}'")
+            status_lbl.set_label(_("Deleted “{name}”").format(name=name))
         except Exception as e:
             log.log_error(f"Could not delete theme: {e}")
-            status_lbl.set_label("Delete failed — check permissions.")
+            status_lbl.set_label(_("Delete failed — check permissions."))
             return
         btn_delete.set_sensitive(False)
         while child := listbox.get_first_child():
             listbox.remove(child)
-        window._theme_loading_lbl.set_label("Reloading…")
+        window._theme_loading_lbl.set_label(_("Reloading…"))
         threading.Thread(target=_load_themes_async, args=(window,), daemon=True).start()
 
     btn_apply.connect("clicked", on_apply)
@@ -635,10 +694,10 @@ def _build_themes_tab(window):
     btn_export.connect("clicked", on_export)
     btn_delete.connect("clicked", on_delete)
 
-    loading_lbl = _label("Loading themes…")
+    loading_lbl = _label(_("Loading themes…"))
     hbox_loading = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=0)
     lbl_credits = _label(
-        "Themes by their respective authors & communities", css_class="dim-label"
+        _("Themes by their respective authors & communities"), css_class="dim-label"
     )
     lbl_credits.set_hexpand(True)
     lbl_credits.set_xalign(1.0)
@@ -689,6 +748,10 @@ def _make_theme_row(theme_name, colors, source_label):
     return row
 
 
+def _source_display(label):
+    return _("My Themes") if label == "My Themes" else label
+
+
 def _populate_theme_list(window, by_source):
     """Called on the GTK main thread to populate the ListBox and update the source dropdown."""
     listbox = window._theme_listbox
@@ -700,10 +763,15 @@ def _populate_theme_list(window, by_source):
     btn_tone_all, btn_tone_dark, btn_tone_light = window._tone_buttons
 
     labels = list(by_source.keys())
-    total_count = sum(len(by_source[lbl]) for lbl in labels)
-    all_display = f"All Themes  ·  {total_count}"
+    total_count = sum(len(by_source[label]) for label in labels)
+    all_display = ngettext("All Themes · {count} theme", "All Themes · {count} themes", total_count).format(
+        count=total_count
+    )
     display_labels = [all_display] + [
-        f"{lbl}  ·  {len(by_source[lbl])}" for lbl in labels
+        ngettext("{source} · {count} theme", "{source} · {count} themes", len(by_source[label])).format(
+            source=_source_display(label), count=len(by_source[label])
+        )
+        for label in labels
     ]
 
     # Populate source_labels before updating model to avoid a stale read in on_source_changed.
@@ -758,7 +826,7 @@ def _populate_theme_list(window, by_source):
         cur_hbox.set_margin_start(6)
         cur_hbox.set_margin_end(6)
         cur_name_lbl = Gtk.Label()
-        markup = "<b>Current theme</b>"
+        markup = _("<b>Current theme</b>")
         if saved_theme:
             markup += f"  {GLib.markup_escape_text(saved_theme)}"
         cur_name_lbl.set_markup(markup)
@@ -772,7 +840,9 @@ def _populate_theme_list(window, by_source):
         window._current_theme_lbl = cur_name_lbl
 
     listbox.invalidate_filter()
-    window._theme_loading_lbl.set_label(f"{total} themes loaded")
+    window._theme_loading_lbl.set_label(
+        ngettext("{count} theme loaded", "{count} themes loaded", total).format(count=total)
+    )
     log.log_timing("themes populated")
     return GLib.SOURCE_REMOVE
 
@@ -804,7 +874,7 @@ def _build_appearance_tab(window):
     left_box.set_margin_end(16)
     scroll_settings.set_child(left_box)
 
-    left_box.append(_label("<b>Font</b>", markup=True))
+    left_box.append(_label(_("<b>Font</b>"), markup=True))
     left_box.append(_separator())
 
     grid = Gtk.Grid()
@@ -817,9 +887,9 @@ def _build_appearance_tab(window):
     all_fonts = [[]]
     mono_fonts = [[]]
 
-    font_lbl = _label("Family")
+    font_lbl = _label(_("Family"))
 
-    font_drop = Gtk.DropDown.new(Gtk.StringList.new(["Loading…"]), None)
+    font_drop = Gtk.DropDown.new(Gtk.StringList.new([_("Loading…")]), None)
     font_drop.set_hexpand(True)
     font_drop.set_enable_search(True)
     font_drop.set_expression(
@@ -830,7 +900,7 @@ def _build_appearance_tab(window):
     grid.attach(font_lbl, 0, 0, 1, 1)
     grid.attach(font_drop, 1, 0, 1, 1)
 
-    mono_lbl = _label("Monospace only")
+    mono_lbl = _label(_("Monospace only"))
     mono_switch = Gtk.Switch()
     mono_switch.set_active(True)
     mono_switch.set_halign(Gtk.Align.START)
@@ -851,7 +921,7 @@ def _build_appearance_tab(window):
     grid.attach(mono_switch, 1, 1, 1, 1)
 
     # ── Font size ─────────────────────────────────────────────────────────────
-    size_lbl = _label("Size")
+    size_lbl = _label(_("Size"))
     size_spin = Gtk.SpinButton.new_with_range(6.0, 32.0, 0.5)
     size_spin.set_value(current_size)
     size_spin.set_digits(1)
@@ -860,7 +930,7 @@ def _build_appearance_tab(window):
     grid.attach(size_spin, 1, 2, 1, 1)
 
     left_box.append(grid)
-    left_box.append(_label("<b>Window</b>", markup=True))
+    left_box.append(_label(_("<b>Window</b>"), markup=True))
     left_box.append(_separator())
 
     window_grid = Gtk.Grid()
@@ -873,7 +943,7 @@ def _build_appearance_tab(window):
         cfg.get_current_window_style()
     )
 
-    opacity_lbl = _label("Opacity")
+    opacity_lbl = _label(_("Opacity"))
     opacity_scale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0.1, 1.0, 0.05)
     opacity_scale.set_value(current_opacity)
     opacity_scale.set_draw_value(True)
@@ -882,28 +952,32 @@ def _build_appearance_tab(window):
     opacity_scale.set_size_request(250, -1)
 
     decorations_list = ["Full", "None", "Transparent", "Buttonless"]
-    decorations_lbl = _label("Decorations")
-    decorations_drop = Gtk.DropDown.new(Gtk.StringList.new(decorations_list), None)
+    decorations_labels = [N_("Full"), N_("None"), N_("Transparent"), N_("Buttonless")]
+    decorations_lbl = _label(_("Decorations"))
+    decorations_drop = Gtk.DropDown.new(
+        Gtk.StringList.new([_(decoration) for decoration in decorations_labels]), None
+    )
     if current_decorations in decorations_list:
         decorations_drop.set_selected(decorations_list.index(current_decorations))
 
     startup_list = ["Windowed", "Maximized", "Fullscreen", "SimpleFullscreen"]
-    startup_lbl = _label("Startup mode")
-    startup_drop = Gtk.DropDown.new(Gtk.StringList.new(startup_list), None)
+    startup_labels = [N_("Windowed"), N_("Maximized"), N_("Fullscreen"), N_("Simple fullscreen")]
+    startup_lbl = _label(_("Startup mode"))
+    startup_drop = Gtk.DropDown.new(Gtk.StringList.new([_(mode) for mode in startup_labels]), None)
     if current_startup_mode in startup_list:
         startup_drop.set_selected(startup_list.index(current_startup_mode))
 
-    dynamic_title_lbl = _label("Dynamic title")
+    dynamic_title_lbl = _label(_("Dynamic title"))
     dynamic_title_switch = Gtk.Switch()
     dynamic_title_switch.set_active(current_dynamic_title)
     dynamic_title_switch.set_halign(Gtk.Align.START)
 
-    blur_lbl = _label("Background blur")
+    blur_lbl = _label(_("Background blur"))
     blur_switch = Gtk.Switch()
     blur_switch.set_active(current_blur)
     blur_switch.set_halign(Gtk.Align.START)
 
-    opacity_hint = _label("Apply and relaunch Alacritty to see the effect")
+    opacity_hint = _label(_("Apply and relaunch Alacritty to see the effect"))
     opacity_hint.add_css_class("dim-label")
     opacity_hint.set_halign(Gtk.Align.START)
 
@@ -921,10 +995,10 @@ def _build_appearance_tab(window):
 
     left_box.append(window_grid)
 
-    btn_apply = Gtk.Button(label="Apply Appearance")
+    btn_apply = Gtk.Button(label=_("Apply Appearance"))
     btn_apply.add_css_class("suggested-action")
 
-    btn_reset_appearance = Gtk.Button(label="Reset to defaults")
+    btn_reset_appearance = Gtk.Button(label=_("Reset to defaults"))
     btn_reset_appearance.add_css_class("flat")
 
     btn_row_appearance = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
@@ -938,7 +1012,7 @@ def _build_appearance_tab(window):
 
     # ── Right: VTE preview panel ──────────────────────────────────────────────
     global _vte_appearance
-    detail_box, _, vte_preview = _build_vte_panel("Font Preview")
+    detail_box, _detail_name_lbl, vte_preview = _build_vte_panel(_("Font Preview"))
     _vte_appearance = vte_preview
     paned.append(detail_box)
     outer.append(paned)
@@ -1042,7 +1116,7 @@ def _build_advanced_tab(window):
     scroll_win.set_child(outer)
 
     # ── Scrolling ─────────────────────────────────────────────────────────────
-    outer.append(_label("<b>Scrolling</b>", markup=True))
+    outer.append(_label(_("<b>Scrolling</b>"), markup=True))
     outer.append(_separator())
 
     scrolling_grid = Gtk.Grid()
@@ -1053,16 +1127,16 @@ def _build_advanced_tab(window):
     current_scrollback = cfg.get_current_scrollback()
     current_multiplier = cfg.get_current_scroll_multiplier()
 
-    scroll_lbl = _label("History (lines)")
+    scroll_lbl = _label(_("History (lines)"))
     # Alacritty has no true unlimited scrollback; 0 disables it entirely.
     # High values work but consume RAM proportionally.
     scroll_spin = Gtk.SpinButton.new_with_range(0, 999999, 1000)
     scroll_spin.set_value(current_scrollback)
     scroll_note = _label(
-        "Max ~1 million lines. There is no true unlimited.", css_class="info-label"
+        _("Max ~1 million lines. There is no true unlimited."), css_class="info-label"
     )
 
-    multiplier_lbl = _label("Scroll speed (multiplier)")
+    multiplier_lbl = _label(_("Scroll speed (multiplier)"))
     multiplier_spin = Gtk.SpinButton.new_with_range(1, 10, 1)
     multiplier_spin.set_value(current_multiplier)
 
@@ -1073,7 +1147,7 @@ def _build_advanced_tab(window):
     scrolling_grid.attach(multiplier_spin, 1, 2, 1, 1)
     outer.append(scrolling_grid)
 
-    btn_apply_scrolling = Gtk.Button(label="Apply Scrolling")
+    btn_apply_scrolling = Gtk.Button(label=_("Apply Scrolling"))
     btn_apply_scrolling.add_css_class("suggested-action")
     status_scrolling = _label("")
 
@@ -1082,10 +1156,10 @@ def _build_advanced_tab(window):
             int(scroll_spin.get_value()), int(multiplier_spin.get_value())
         )
         status_scrolling.set_label(
-            "Scrolling applied. Restart Alacritty to see changes."
+            _("Scrolling applied. Restart Alacritty to see changes.")
         )
 
-    btn_reset_scrolling = Gtk.Button(label="Reset to defaults")
+    btn_reset_scrolling = Gtk.Button(label=_("Reset to defaults"))
     btn_reset_scrolling.add_css_class("flat")
 
     def on_reset_scrolling(_widget):
@@ -1104,7 +1178,7 @@ def _build_advanced_tab(window):
     outer.append(status_scrolling)
 
     # ── Window Padding ────────────────────────────────────────────────────────
-    outer.append(_label("<b>Window Padding</b>", markup=True))
+    outer.append(_label(_("<b>Window Padding</b>"), markup=True))
     outer.append(_separator())
 
     padding_grid = Gtk.Grid()
@@ -1114,11 +1188,11 @@ def _build_advanced_tab(window):
 
     current_pad_x, current_pad_y = cfg.get_current_padding()
 
-    pad_x_lbl = _label("Horizontal (px)")
+    pad_x_lbl = _label(_("Horizontal (px)"))
     pad_x_spin = Gtk.SpinButton.new_with_range(0, 50, 1)
     pad_x_spin.set_value(current_pad_x)
 
-    pad_y_lbl = _label("Vertical (px)")
+    pad_y_lbl = _label(_("Vertical (px)"))
     pad_y_spin = Gtk.SpinButton.new_with_range(0, 50, 1)
     pad_y_spin.set_value(current_pad_y)
 
@@ -1128,7 +1202,7 @@ def _build_advanced_tab(window):
     padding_grid.attach(pad_y_spin, 1, 1, 1, 1)
     outer.append(padding_grid)
 
-    btn_apply_padding = Gtk.Button(label="Apply Padding")
+    btn_apply_padding = Gtk.Button(label=_("Apply Padding"))
     btn_apply_padding.add_css_class("suggested-action")
     status_padding = _label("")
 
@@ -1136,9 +1210,9 @@ def _build_advanced_tab(window):
         cfg.apply_window_padding(
             int(pad_x_spin.get_value()), int(pad_y_spin.get_value())
         )
-        status_padding.set_label("Padding applied. Restart Alacritty to see changes.")
+        status_padding.set_label(_("Padding applied. Restart Alacritty to see changes."))
 
-    btn_reset_padding = Gtk.Button(label="Reset to defaults")
+    btn_reset_padding = Gtk.Button(label=_("Reset to defaults"))
     btn_reset_padding.add_css_class("flat")
 
     def on_reset_padding(_widget):
@@ -1157,7 +1231,7 @@ def _build_advanced_tab(window):
     outer.append(status_padding)
 
     # ── Cursor ────────────────────────────────────────────────────────────────
-    outer.append(_label("<b>Cursor</b>", markup=True))
+    outer.append(_label(_("<b>Cursor</b>"), markup=True))
     outer.append(_separator())
 
     cursor_grid = Gtk.Grid()
@@ -1169,19 +1243,19 @@ def _build_advanced_tab(window):
     current_thickness, current_blink_timeout, current_hollow = (
         cfg.get_current_cursor_extras()
     )
-    shapes = ["Block", "Beam", "Underline"]
+    shapes = [N_("Block"), N_("Beam"), N_("Underline")]
 
-    shape_lbl = _label("Shape")
-    shape_drop = Gtk.DropDown.new(Gtk.StringList.new(shapes), None)
+    shape_lbl = _label(_("Shape"))
+    shape_drop = Gtk.DropDown.new(Gtk.StringList.new([_(shape) for shape in shapes]), None)
     if current_shape in shapes:
         shape_drop.set_selected(shapes.index(current_shape))
 
-    blink_lbl = _label("Blink")
+    blink_lbl = _label(_("Blink"))
     blink_switch = Gtk.Switch()
     blink_switch.set_active(current_blink)
     blink_switch.set_halign(Gtk.Align.START)
 
-    thickness_lbl = _label("Thickness")
+    thickness_lbl = _label(_("Thickness"))
     thickness_scale = Gtk.Scale.new_with_range(
         Gtk.Orientation.HORIZONTAL, 0.0, 1.0, 0.05
     )
@@ -1191,11 +1265,11 @@ def _build_advanced_tab(window):
     thickness_scale.set_hexpand(True)
     thickness_scale.set_size_request(200, -1)
 
-    blink_timeout_lbl = _label("Blink timeout (s, 0 = never stop)")
+    blink_timeout_lbl = _label(_("Blink timeout (s, 0 = never stop)"))
     blink_timeout_spin = Gtk.SpinButton.new_with_range(0, 30, 1)
     blink_timeout_spin.set_value(current_blink_timeout)
 
-    hollow_lbl = _label("Hollow when unfocused")
+    hollow_lbl = _label(_("Hollow when unfocused"))
     hollow_switch = Gtk.Switch()
     hollow_switch.set_active(current_hollow)
     hollow_switch.set_halign(Gtk.Align.START)
@@ -1212,7 +1286,7 @@ def _build_advanced_tab(window):
     cursor_grid.attach(hollow_switch, 1, 4, 1, 1)
     outer.append(cursor_grid)
 
-    btn_apply_cursor = Gtk.Button(label="Apply Cursor")
+    btn_apply_cursor = Gtk.Button(label=_("Apply Cursor"))
     btn_apply_cursor.add_css_class("suggested-action")
     status_cursor = _label("")
 
@@ -1226,9 +1300,9 @@ def _build_advanced_tab(window):
             int(blink_timeout_spin.get_value()),
             hollow_switch.get_active(),
         )
-        status_cursor.set_label("Cursor applied. Restart Alacritty to see changes.")
+        status_cursor.set_label(_("Cursor applied. Restart Alacritty to see changes."))
 
-    btn_reset_cursor = Gtk.Button(label="Reset to defaults")
+    btn_reset_cursor = Gtk.Button(label=_("Reset to defaults"))
     btn_reset_cursor.add_css_class("flat")
 
     def on_reset_cursor(_widget):
@@ -1252,7 +1326,7 @@ def _build_advanced_tab(window):
     outer.append(status_cursor)
 
     # ── Font Spacing ──────────────────────────────────────────────────────────
-    outer.append(_label("<b>Font Spacing</b>", markup=True))
+    outer.append(_label(_("<b>Font Spacing</b>"), markup=True))
     outer.append(_separator())
 
     font_offset_grid = Gtk.Grid()
@@ -1262,11 +1336,11 @@ def _build_advanced_tab(window):
 
     current_off_x, current_off_y = cfg.get_current_font_offset()
 
-    off_x_lbl = _label("Char spacing (offset.x)")
+    off_x_lbl = _label(_("Char spacing (offset.x)"))
     off_x_spin = Gtk.SpinButton.new_with_range(-5, 10, 1)
     off_x_spin.set_value(current_off_x)
 
-    off_y_lbl = _label("Line spacing (offset.y)")
+    off_y_lbl = _label(_("Line spacing (offset.y)"))
     off_y_spin = Gtk.SpinButton.new_with_range(-5, 10, 1)
     off_y_spin.set_value(current_off_y)
 
@@ -1276,17 +1350,17 @@ def _build_advanced_tab(window):
     font_offset_grid.attach(off_y_spin, 1, 1, 1, 1)
     outer.append(font_offset_grid)
 
-    btn_apply_font_offset = Gtk.Button(label="Apply Font Spacing")
+    btn_apply_font_offset = Gtk.Button(label=_("Apply Font Spacing"))
     btn_apply_font_offset.add_css_class("suggested-action")
     status_font_offset = _label("")
 
     def on_apply_font_offset(_widget):
         cfg.apply_font_offset(int(off_x_spin.get_value()), int(off_y_spin.get_value()))
         status_font_offset.set_label(
-            "Font spacing applied. Restart Alacritty to see changes."
+            _("Font spacing applied. Restart Alacritty to see changes.")
         )
 
-    btn_reset_font_offset = Gtk.Button(label="Reset to defaults")
+    btn_reset_font_offset = Gtk.Button(label=_("Reset to defaults"))
     btn_reset_font_offset.add_css_class("flat")
 
     def on_reset_font_offset(_widget):
@@ -1320,7 +1394,7 @@ def _build_behavior_tab(window):
 
     current_save, current_hide, current_live = cfg.get_current_behavior()
 
-    outer.append(_label("<b>Selection</b>", markup=True))
+    outer.append(_label(_("<b>Selection</b>"), markup=True))
     outer.append(_separator())
 
     sel_grid = Gtk.Grid()
@@ -1328,7 +1402,7 @@ def _build_behavior_tab(window):
     sel_grid.set_row_spacing(10)
     sel_grid.set_margin_top(8)
 
-    save_lbl = _label("Copy on select")
+    save_lbl = _label(_("Copy on select"))
     save_switch = Gtk.Switch()
     save_switch.set_active(current_save)
     save_switch.set_halign(Gtk.Align.START)
@@ -1337,7 +1411,7 @@ def _build_behavior_tab(window):
     sel_grid.attach(save_switch, 1, 0, 1, 1)
     outer.append(sel_grid)
 
-    outer.append(_label("<b>Mouse</b>", markup=True))
+    outer.append(_label(_("<b>Mouse</b>"), markup=True))
     outer.append(_separator())
 
     mouse_grid = Gtk.Grid()
@@ -1345,7 +1419,7 @@ def _build_behavior_tab(window):
     mouse_grid.set_row_spacing(10)
     mouse_grid.set_margin_top(8)
 
-    hide_lbl = _label("Hide when typing")
+    hide_lbl = _label(_("Hide when typing"))
     hide_switch = Gtk.Switch()
     hide_switch.set_active(current_hide)
     hide_switch.set_halign(Gtk.Align.START)
@@ -1354,7 +1428,7 @@ def _build_behavior_tab(window):
     mouse_grid.attach(hide_switch, 1, 0, 1, 1)
     outer.append(mouse_grid)
 
-    outer.append(_label("<b>General</b>", markup=True))
+    outer.append(_label(_("<b>General</b>"), markup=True))
     outer.append(_separator())
 
     general_grid = Gtk.Grid()
@@ -1362,7 +1436,7 @@ def _build_behavior_tab(window):
     general_grid.set_row_spacing(10)
     general_grid.set_margin_top(8)
 
-    live_lbl = _label("Live config reload")
+    live_lbl = _label(_("Live config reload"))
     live_switch = Gtk.Switch()
     live_switch.set_active(current_live)
     live_switch.set_halign(Gtk.Align.START)
@@ -1371,7 +1445,7 @@ def _build_behavior_tab(window):
     general_grid.attach(live_switch, 1, 0, 1, 1)
     outer.append(general_grid)
 
-    btn_apply = Gtk.Button(label="Apply Behavior")
+    btn_apply = Gtk.Button(label=_("Apply Behavior"))
     btn_apply.add_css_class("suggested-action")
     status_lbl = _label("")
 
@@ -1379,9 +1453,9 @@ def _build_behavior_tab(window):
         cfg.apply_behavior(
             save_switch.get_active(), hide_switch.get_active(), live_switch.get_active()
         )
-        status_lbl.set_label("Behavior applied. Restart Alacritty to see changes.")
+        status_lbl.set_label(_("Behavior applied. Restart Alacritty to see changes."))
 
-    btn_reset_behavior = Gtk.Button(label="Reset to defaults")
+    btn_reset_behavior = Gtk.Button(label=_("Reset to defaults"))
     btn_reset_behavior.add_css_class("flat")
 
     def on_reset_behavior(_widget):
@@ -1575,23 +1649,23 @@ def _build_creator_tab(window, notebook):
     if shutil.which("convert"):
         wall_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
         wall_box.set_margin_bottom(6)
-        wall_box.append(_label("Wallpaper:"))
+        wall_box.append(_label(_("Wallpaper:")))
         wall_entry = Gtk.Entry()
-        wall_entry.set_placeholder_text("Select an image to extract colors…")
+        wall_entry.set_placeholder_text(_("Select an image to extract colors…"))
         wall_entry.set_hexpand(True)
-        btn_browse = Gtk.Button(label="Browse")
-        btn_current = Gtk.Button(label="Current Wallpaper")
-        btn_extract = Gtk.Button(label="Extract Colors")
+        btn_browse = Gtk.Button(label=_("Browse"))
+        btn_current = Gtk.Button(label=_("Current Wallpaper"))
+        btn_extract = Gtk.Button(label=_("Extract Colors"))
         btn_extract.set_sensitive(False)
         lbl_wall_source = _label("", css_class="info-label")
         current_wp, current_src = _get_current_wallpaper()
         if current_wp is None:
             btn_current.set_sensitive(False)
             btn_current.set_tooltip_text(
-                "No current wallpaper found (Variety / ~/.fehbg)"
+                _("No current wallpaper found (Variety / ~/.fehbg)")
             )
         else:
-            lbl_wall_source.set_text(f"Detected via {current_src}")
+            lbl_wall_source.set_text(_("Detected via {source}").format(source=current_src))
         wall_box.append(wall_entry)
         wall_box.append(btn_browse)
         wall_box.append(btn_current)
@@ -1627,48 +1701,48 @@ def _build_creator_tab(window, notebook):
         return btn
 
     # Primary
-    editor.append(_label("<b>Primary</b>", markup=True))
+    editor.append(_label(_("<b>Primary</b>"), markup=True))
     editor.append(_separator())
     primary_grid = Gtk.Grid()
     primary_grid.set_column_spacing(12)
     primary_grid.set_row_spacing(6)
     primary_grid.set_margin_top(4)
     for row, key in enumerate(("background", "foreground")):
-        primary_grid.attach(_label(key.capitalize()), 0, row, 1, 1)
+        primary_grid.attach(_label(_color_label(key)), 0, row, 1, 1)
         btn = _make_btn(_CREATOR_DEFAULTS["primary"][key])
         btns[f"primary.{key}"] = btn
         primary_grid.attach(btn, 1, row, 1, 1)
     editor.append(primary_grid)
 
     # Cursor
-    editor.append(_label("<b>Cursor</b>", markup=True))
+    editor.append(_label(_("<b>Cursor</b>"), markup=True))
     editor.append(_separator())
     cursor_grid = Gtk.Grid()
     cursor_grid.set_column_spacing(12)
     cursor_grid.set_row_spacing(6)
     cursor_grid.set_margin_top(4)
     for row, key in enumerate(("text", "cursor")):
-        cursor_grid.attach(_label(key.capitalize()), 0, row, 1, 1)
+        cursor_grid.attach(_label(_color_label(key)), 0, row, 1, 1)
         btn = _make_btn(_CREATOR_DEFAULTS["cursor"][key])
         btns[f"cursor.{key}"] = btn
         cursor_grid.attach(btn, 1, row, 1, 1)
     editor.append(cursor_grid)
 
     # Normal / Bright
-    editor.append(_label("<b>Colors</b>", markup=True))
+    editor.append(_label(_("<b>Colors</b>"), markup=True))
     editor.append(_separator())
     colors_grid = Gtk.Grid()
     colors_grid.set_column_spacing(12)
     colors_grid.set_row_spacing(6)
     colors_grid.set_margin_top(4)
     hdr_n = Gtk.Label()
-    hdr_n.set_markup("<b>Normal</b>")
+    hdr_n.set_markup(_("<b>Normal</b>"))
     hdr_b = Gtk.Label()
-    hdr_b.set_markup("<b>Bright</b>")
+    hdr_b.set_markup(_("<b>Bright</b>"))
     colors_grid.attach(hdr_n, 1, 0, 1, 1)
     colors_grid.attach(hdr_b, 2, 0, 1, 1)
     for row, name in enumerate(_ANSI_NAMES, start=1):
-        colors_grid.attach(_label(name.capitalize()), 0, row, 1, 1)
+        colors_grid.attach(_label(_color_label(name)), 0, row, 1, 1)
         btn_n = _make_btn(_CREATOR_DEFAULTS["normal"][name])
         btn_b = _make_btn(_CREATOR_DEFAULTS["bright"][name])
         btns[f"normal.{name}"] = btn_n
@@ -1682,9 +1756,9 @@ def _build_creator_tab(window, notebook):
     save_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
     save_row.set_margin_top(4)
     name_entry = Gtk.Entry()
-    name_entry.set_placeholder_text("Theme name…")
+    name_entry.set_placeholder_text(_("Theme name…"))
     name_entry.set_hexpand(True)
-    btn_save = Gtk.Button(label="Save Theme")
+    btn_save = Gtk.Button(label=_("Save Theme"))
     btn_save.add_css_class("suggested-action")
     status_lbl = _label("", css_class="info-label")
     save_row.append(name_entry)
@@ -1698,7 +1772,7 @@ def _build_creator_tab(window, notebook):
 
     global _vte_creator, _creator_btns
     _creator_btns = btns
-    vte_box, _, vte_terminal = _build_vte_panel("Color Preview")
+    vte_box, _detail_name_lbl, vte_terminal = _build_vte_panel(_("Color Preview"))
     _vte_creator = vte_terminal
     paned.append(vte_box)
 
@@ -1740,12 +1814,12 @@ def _build_creator_tab(window, notebook):
 
         def _on_browse(_w):
             dialog = Gtk.FileChooserNative(
-                title="Select wallpaper image",
+                title=_("Select wallpaper image"),
                 transient_for=window,
                 action=Gtk.FileChooserAction.OPEN,
             )
             img_filter = Gtk.FileFilter()
-            img_filter.set_name("Images")
+            img_filter.set_name(_("Images"))
             img_filter.add_mime_type("image/*")
             dialog.add_filter(img_filter)
 
@@ -1765,7 +1839,7 @@ def _build_creator_tab(window, notebook):
             if not path:
                 return
             btn_extract.set_sensitive(False)
-            status_lbl.set_text("Extracting colors…")
+            status_lbl.set_text(_("Extracting colors…"))
 
             def _do_extract():
                 colors = _extract_colors_from_image(path)
@@ -1774,7 +1848,7 @@ def _build_creator_tab(window, notebook):
                     btn_extract.set_sensitive(True)
                     if colors is None:
                         status_lbl.set_text(
-                            "Could not extract colors — check file path."
+                            _("Could not extract colors — check file path.")
                         )
                         return
                     for section, keys in (
@@ -1793,7 +1867,7 @@ def _build_creator_tab(window, notebook):
                                     _hex_to_rgba(colors[section][name])
                                 )
                     _apply_vte_colors(vte_terminal, _read_colors())
-                    status_lbl.set_text("Colors extracted — tweak and save.")
+                    status_lbl.set_text(_("Colors extracted — tweak and save."))
                     log.log_success("Wallpaper colors extracted")
 
                 GLib.idle_add(_apply_extracted)
@@ -1806,7 +1880,7 @@ def _build_creator_tab(window, notebook):
                 wall_entry.set_text(path)
                 wallpaper_path[0] = path
                 btn_extract.set_sensitive(True)
-                lbl_wall_source.set_text(f"via {source}")
+                lbl_wall_source.set_text(_("Wallpaper source: {source}").format(source=source))
 
         btn_browse.connect("clicked", _on_browse)
         btn_current.connect("clicked", _on_current)
@@ -1816,11 +1890,11 @@ def _build_creator_tab(window, notebook):
     def _on_save(_w):
         name = name_entry.get_text().strip()
         if not name:
-            status_lbl.set_text("Enter a theme name first.")
+            status_lbl.set_text(_("Enter a theme name first."))
             return
         colors = _read_colors()
         themes.export_theme(name, colors)
-        status_lbl.set_text("Saved — switching to Themes tab…")
+        status_lbl.set_text(_("Saved — switching to Themes tab…"))
         log.log_success(f"Theme created: {name}")
         prefs = cfg.load_prefs()
         prefs["last_source"] = "My Themes"
@@ -1846,13 +1920,13 @@ def _build_dev_tab():
     outer.set_margin_start(16)
     outer.set_margin_end(16)
 
-    lbl_title = _label("Developer Tools")
+    lbl_title = _label(_("Developer Tools"))
     lbl_title.set_name("title")
     outer.append(lbl_title)
     outer.append(_separator())
 
     lbl_section = Gtk.Label()
-    lbl_section.set_markup("<b>Theme Sources</b>")
+    lbl_section.set_markup(_("<b>Theme Sources</b>"))
     lbl_section.set_halign(Gtk.Align.START)
     lbl_section.set_margin_top(12)
     lbl_section.set_margin_bottom(8)
@@ -1868,7 +1942,7 @@ def _build_dev_tab():
     except Exception as e:
         log.log_error(f"Could not load registry.json: {e}")
         outer.append(
-            _label("registry.json missing or invalid — cannot display sources")
+            _label(_("registry.json missing or invalid — cannot display sources"))
         )
         scroll = Gtk.ScrolledWindow()
         scroll.set_vexpand(True)
@@ -1880,10 +1954,10 @@ def _build_dev_tab():
     grid.set_row_spacing(8)
 
     for col, text in enumerate(
-        ("Source", "Themes", "Added", "Last Checked", "Status", "")
+        (N_("Source"), N_("Themes"), N_("Added"), N_("Last Checked"), N_("Status"), "")
     ):
         h = Gtk.Label()
-        h.set_markup(f"<b>{text}</b>")
+        h.set_markup(f"<b>{_(text)}</b>")
         h.set_halign(Gtk.Align.START)
         grid.attach(h, col, 0, 1, 1)
 
@@ -1908,7 +1982,7 @@ def _build_dev_tab():
         last_checked_val = (meta.get("last_checked") or "—") if installed else "—"
 
         lbl_last = _label(last_checked_val)
-        lbl_status = _label("Installed" if installed else "Not installed")
+        lbl_status = _label(_("Installed") if installed else _("Not installed"))
         lbl_status.add_css_class("dim-label" if not installed else "")
 
         grid.attach(_label(entry.get("label", dirname)), 0, row_idx, 1, 1)
@@ -1918,11 +1992,11 @@ def _build_dev_tab():
         grid.attach(lbl_status, 4, row_idx, 1, 1)
 
         update_cmd = entry.get("update_command") or ""
-        btn = Gtk.Button(label="Update" if installed else "Install")
+        btn = Gtk.Button(label=_("Update") if installed else _("Install"))
 
         if not update_cmd:
             btn.set_sensitive(False)
-            btn.set_tooltip_text("Built-in source — edit manually")
+            btn.set_tooltip_text(_("Built-in source — edit manually"))
         else:
 
             def _on_action(
@@ -1992,10 +2066,10 @@ def _build_dev_tab():
                             log.log_success(f"Installed: {entry_.get('label', '')}")
                         except Exception as ex:
                             log.log_error(f"Could not write source.json: {ex}")
-                        GLib.idle_add(lbl_status_.set_text, "Installed")
+                        GLib.idle_add(lbl_status_.set_text, _("Installed"))
                         GLib.idle_add(lbl_status_.remove_css_class, "dim-label")
                         GLib.idle_add(lbl_last_.set_text, today)
-                        GLib.idle_add(btn_.set_label, "Update")
+                        GLib.idle_add(btn_.set_label, _("Update"))
 
                 threading.Thread(target=_wait, daemon=True).start()
 

@@ -1,0 +1,713 @@
+# Turkish translations for alacritty-tweak-tool package.
+# Copyright (C) 2026 THE alacritty-tweak-tool'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the alacritty-tweak-tool package.
+# Automatically generated, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: alacritty-tweak-tool\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-31 14:43+0100\n"
+"PO-Revision-Date: 2026-10-31 14:10+0100\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: Turkish\n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: usr/share/alacritty-tweak-tool/alacritty-tweak-tool.py:74
+#: po/alacritty-tweak-tool.desktop.in:2
+msgid "Alacritty Tweak Tool"
+msgstr "Alacritty Tweak Tool"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:37
+msgid "Background"
+msgstr "Arka plan"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:38
+msgid "Foreground"
+msgstr "Ön plan"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:39
+msgid "Text"
+msgstr "Metin"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:40
+msgid "Cursor"
+msgstr "İmleç"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:41
+msgid "Black"
+msgstr "Siyah"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:42
+msgid "Red"
+msgstr "Kırmızı"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:43
+msgid "Green"
+msgstr "Yeşil"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:44
+msgid "Yellow"
+msgstr "Sarı"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:45
+msgid "Blue"
+msgstr "Mavi"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:46
+msgid "Magenta"
+msgstr "Macenta"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:47
+msgid "Cyan"
+msgstr "Camgöbeği"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:48
+msgid "White"
+msgstr "Beyaz"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:230
+msgid "Terminal preview unavailable — install vte4"
+msgstr "Terminal önizlemesi kullanılamıyor. vte4'ü yükleyin"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:254
+msgid "best value — almost all goes to the project"
+msgstr "en avantajlı seçenek: neredeyse tamamı projeye gider"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:255
+msgid "buy a coffee — one-off tip"
+msgstr "bir kahve ısmarlayın: tek seferlik bahşiş"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:256
+msgid "membership tiers + perks"
+msgstr "üyelik seviyeleri ve ayrıcalıklar"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:257
+msgid "YouTube membership"
+msgstr "YouTube kanal üyeliği"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:257
+msgid "join on YouTube"
+msgstr "YouTube'da üye olun"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:258
+msgid "direct one-off"
+msgstr "doğrudan, tek seferlik bağış"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:267
+msgid "Support Kiro"
+msgstr "Kiro'yu destekleyin"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:273
+msgid "<b>Support Kiro</b>"
+msgstr "<b>Kiro'yu Destekleyin</b>"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:275
+msgid ""
+"Kiro and its tools are built by one person, for the community — and kept "
+"free. If Alacritty Tweak Tool saves you time, a little support keeps the "
+"work going. Thank you for being here."
+msgstr ""
+"Kiro ve araçları topluluk için tek bir kişi tarafından geliştiriliyor ve "
+"ücretsiz sunuluyor. Alacritty Tweak Tool size zaman kazandırıyorsa, küçük "
+"bir destek çalışmaların sürmesine katkı sağlar. Burada olduğunuz için "
+"teşekkürler."
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:293
+msgid "Close"
+msgstr "Kapat"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:305
+#, python-brace-format
+msgid "System ({language})"
+msgstr "Sistem ({language})"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:308
+msgid "Language"
+msgstr "Dil"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:313
+msgid "Restart now"
+msgstr "Şimdi yeniden başlat"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:320
+msgid "Saved. The app shows the new language when it starts again."
+msgstr "Kaydedildi. Uygulama yeniden başladığında yeni dili gösterir."
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:356
+msgid "♥ Support"
+msgstr "♥ Destekle"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:357
+msgid "Support Kiro's development"
+msgstr "Kiro'nun geliştirilmesini destekleyin"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:361
+msgid "Quit"
+msgstr "Çık"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:378
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1957
+msgid "Themes"
+msgstr "Temalar"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:380
+msgid "Appearance"
+msgstr "Görünüm"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:382
+msgid "Advanced"
+msgstr "Gelişmiş"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:383
+msgid "Behavior"
+msgstr "Davranış"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:385
+msgid "Creator"
+msgstr "Oluşturan"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:388
+msgid "Dev"
+msgstr "Geliştirici"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:409
+msgid ""
+"Applying a theme overwrites colors currently managed by ohmychadwm-menu. A "
+"backup is saved to alacritty.toml-bak before every write."
+msgstr ""
+"Tema uygulandığında ohmychadwm-menu tarafından yönetilen renklerin üzerine "
+"yazılır. Her yazma işleminden önce alacritty.toml-bak dosyasına yedek alınır."
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:421
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:892
+msgid "Loading…"
+msgstr "Yükleniyor…"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:425
+msgid "Filter by name…"
+msgstr "Ada göre filtrele…"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:430
+msgid "All"
+msgstr "Tümü"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:432
+msgid "Dark"
+msgstr "Koyu"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:434
+msgid "Light"
+msgstr "Açık"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:537
+msgid "Select a theme from the list"
+msgstr "Listeden bir tema seçin"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:546
+msgid "Apply Theme"
+msgstr "Temayı Uygula"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:549
+msgid "Undo Last Apply"
+msgstr "Son Uygulamayı Geri Al"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:550
+msgid "Delete Theme"
+msgstr "Temayı Sil"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:553
+msgid "Only available for My Themes"
+msgstr "Yalnızca Temalarım için kullanılabilir"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:564
+msgid "Save selection as…"
+msgstr "Seçimi farklı kaydet…"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:566
+msgid "Export"
+msgstr "Dışa Aktar"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:597
+msgid "<b>Select a theme from the list</b>"
+msgstr "<b>Listeden bir tema seçin</b>"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:649
+#, python-brace-format
+msgid "<b>Current theme</b>  {name}"
+msgstr "<b>Geçerli tema</b>  {name}"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:651
+msgid "Theme applied. Restart Alacritty to see changes."
+msgstr ""
+"Tema uygulandı. Değişiklikleri görmek için Alacritty'yi yeniden başlatın."
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:655
+msgid "No backup found."
+msgstr "Yedek bulunamadı."
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:655
+msgid "Restored from backup."
+msgstr "Yedekten geri yüklendi."
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:664
+#, python-brace-format
+msgid "Saved “{name}” — reloading…"
+msgstr "“{name}” kaydedildi, yeniden yükleniyor…"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:667
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:689
+msgid "Reloading…"
+msgstr "Yeniden yükleniyor…"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:676
+msgid "File not found — already deleted?"
+msgstr "Dosya bulunamadı. Zaten silinmiş olabilir mi?"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:681
+#, python-brace-format
+msgid "Deleted “{name}”"
+msgstr "“{name}” silindi"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:684
+msgid "Delete failed — check permissions."
+msgstr "Silinemedi. İzinleri kontrol edin."
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:697
+msgid "Loading themes…"
+msgstr "Temalar yükleniyor…"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:700
+msgid "Themes by their respective authors & communities"
+msgstr "Temalar, ilgili yazarları ve toplulukları tarafından sunulur"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:752
+msgid "My Themes"
+msgstr "Temalarım"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:767
+#, python-brace-format
+msgid "All Themes · {count} theme"
+msgid_plural "All Themes · {count} themes"
+msgstr[0] "Tüm Temalar · {count} tema"
+msgstr[1] "Tüm Temalar · {count} tema"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:771
+#, python-brace-format
+msgid "{source} · {count} theme"
+msgid_plural "{source} · {count} themes"
+msgstr[0] "{source} · {count} tema"
+msgstr[1] "{source} · {count} tema"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:829
+msgid "<b>Current theme</b>"
+msgstr "<b>Geçerli tema</b>"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:844
+#, python-brace-format
+msgid "{count} theme loaded"
+msgid_plural "{count} themes loaded"
+msgstr[0] "{count} tema yüklendi"
+msgstr[1] "{count} tema yüklendi"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:877
+msgid "<b>Font</b>"
+msgstr "<b>Yazı tipi</b>"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:890
+msgid "Family"
+msgstr "Aile"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:903
+msgid "Monospace only"
+msgstr "Yalnızca sabit genişlikli"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:924
+msgid "Size"
+msgstr "Boyut"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:933
+msgid "<b>Window</b>"
+msgstr "<b>Pencere</b>"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:946
+msgid "Opacity"
+msgstr "Opaklık"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:955
+msgid "Buttonless"
+msgstr "Düğmesiz"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:955
+msgid "Full"
+msgstr "Tam"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:955
+msgid "None"
+msgstr "Yok"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:955
+msgid "Transparent"
+msgstr "Saydam"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:956
+msgid "Decorations"
+msgstr "Dekorasyonlar"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:964
+msgid "Fullscreen"
+msgstr "Tam ekran"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:964
+msgid "Maximized"
+msgstr "Ekranı kapla"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:964
+msgid "Simple fullscreen"
+msgstr "Basit tam ekran"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:964
+msgid "Windowed"
+msgstr "Pencereli"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:965
+msgid "Startup mode"
+msgstr "Başlangıç modu"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:970
+msgid "Dynamic title"
+msgstr "Dinamik başlık"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:975
+msgid "Background blur"
+msgstr "Arka plan bulanıklığı"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:980
+msgid "Apply and relaunch Alacritty to see the effect"
+msgstr "Etkiyi görmek için uygulayın ve Alacritty'yi yeniden başlatın"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:998
+msgid "Apply Appearance"
+msgstr "Görünümü Uygula"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1001
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1162
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1215
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1305
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1363
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1458
+msgid "Reset to defaults"
+msgstr "Varsayılanlara sıfırla"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1015
+msgid "Font Preview"
+msgstr "Yazı Tipi Önizlemesi"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1119
+msgid "<b>Scrolling</b>"
+msgstr "<b>Kaydırma</b>"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1130
+msgid "History (lines)"
+msgstr "Geçmiş (satır)"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1136
+msgid "Max ~1 million lines. There is no true unlimited."
+msgstr "En fazla yaklaşık 1 milyon satır. Gerçek anlamda sınırsız değildir."
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1139
+msgid "Scroll speed (multiplier)"
+msgstr "Kaydırma hızı (çarpan)"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1150
+msgid "Apply Scrolling"
+msgstr "Kaydırmayı Uygula"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1159
+msgid "Scrolling applied. Restart Alacritty to see changes."
+msgstr ""
+"Kaydırma ayarları uygulandı. Değişiklikleri görmek için Alacritty'yi yeniden "
+"başlatın."
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1181
+msgid "<b>Window Padding</b>"
+msgstr "<b>Pencere Kenar Boşluğu</b>"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1191
+msgid "Horizontal (px)"
+msgstr "Yatay (px)"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1195
+msgid "Vertical (px)"
+msgstr "Dikey (px)"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1205
+msgid "Apply Padding"
+msgstr "Kenar Boşluğunu Uygula"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1213
+msgid "Padding applied. Restart Alacritty to see changes."
+msgstr ""
+"Kenar boşluğu ayarları uygulandı. Değişiklikleri görmek için Alacritty'yi "
+"yeniden başlatın."
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1234
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1718
+msgid "<b>Cursor</b>"
+msgstr "<b>İmleç</b>"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1246
+msgid "Beam"
+msgstr "Çizgi"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1246
+msgid "Block"
+msgstr "Blok"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1246
+msgid "Underline"
+msgstr "Alt çizgi"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1248
+msgid "Shape"
+msgstr "Şekil"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1253
+msgid "Blink"
+msgstr "Yanıp sönme"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1258
+msgid "Thickness"
+msgstr "Kalınlık"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1268
+msgid "Blink timeout (s, 0 = never stop)"
+msgstr "Yanıp sönme zaman aşımı (sn, 0 = hiç durma)"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1272
+msgid "Hollow when unfocused"
+msgstr "Odak dışındayken içi boş"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1289
+msgid "Apply Cursor"
+msgstr "İmleci Uygula"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1303
+msgid "Cursor applied. Restart Alacritty to see changes."
+msgstr ""
+"İmleç ayarları uygulandı. Değişiklikleri görmek için Alacritty'yi yeniden "
+"başlatın."
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1329
+msgid "<b>Font Spacing</b>"
+msgstr "<b>Yazı Tipi Aralığı</b>"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1339
+msgid "Char spacing (offset.x)"
+msgstr "Karakter aralığı (offset.x)"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1343
+msgid "Line spacing (offset.y)"
+msgstr "Satır aralığı (offset.y)"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1353
+msgid "Apply Font Spacing"
+msgstr "Yazı Tipi Aralığını Uygula"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1360
+msgid "Font spacing applied. Restart Alacritty to see changes."
+msgstr ""
+"Yazı tipi aralığı uygulandı. Değişiklikleri görmek için Alacritty'yi yeniden "
+"başlatın."
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1397
+msgid "<b>Selection</b>"
+msgstr "<b>Seçim</b>"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1405
+msgid "Copy on select"
+msgstr "Seçince kopyala"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1414
+msgid "<b>Mouse</b>"
+msgstr "<b>Fare</b>"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1422
+msgid "Hide when typing"
+msgstr "Yazarken gizle"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1431
+msgid "<b>General</b>"
+msgstr "<b>Genel</b>"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1439
+msgid "Live config reload"
+msgstr "Yapılandırmayı canlı yeniden yükle"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1448
+msgid "Apply Behavior"
+msgstr "Davranışı Uygula"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1456
+msgid "Behavior applied. Restart Alacritty to see changes."
+msgstr ""
+"Davranış ayarları uygulandı. Değişiklikleri görmek için Alacritty'yi yeniden "
+"başlatın."
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1652
+msgid "Wallpaper:"
+msgstr "Duvar kâğıdı:"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1654
+msgid "Select an image to extract colors…"
+msgstr "Renkleri çıkarmak için bir görsel seçin…"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1656
+msgid "Browse"
+msgstr "Göz at"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1657
+msgid "Current Wallpaper"
+msgstr "Geçerli Duvar Kâğıdı"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1658
+msgid "Extract Colors"
+msgstr "Renkleri Çıkar"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1665
+msgid "No current wallpaper found (Variety / ~/.fehbg)"
+msgstr "Geçerli duvar kâğıdı bulunamadı (Variety / ~/.fehbg)"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1668
+#, python-brace-format
+msgid "Detected via {source}"
+msgstr "{source} üzerinden algılandı"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1704
+msgid "<b>Primary</b>"
+msgstr "<b>Birincil</b>"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1732
+msgid "<b>Colors</b>"
+msgstr "<b>Renkler</b>"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1739
+msgid "<b>Normal</b>"
+msgstr "<b>Normal</b>"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1741
+msgid "<b>Bright</b>"
+msgstr "<b>Parlak</b>"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1759
+msgid "Theme name…"
+msgstr "Tema adı…"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1761
+msgid "Save Theme"
+msgstr "Temayı Kaydet"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1775
+msgid "Color Preview"
+msgstr "Renk Önizlemesi"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1817
+msgid "Select wallpaper image"
+msgstr "Duvar kâğıdı görseli seçin"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1822
+msgid "Images"
+msgstr "Görseller"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1842
+msgid "Extracting colors…"
+msgstr "Renkler çıkarılıyor…"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1851
+msgid "Could not extract colors — check file path."
+msgstr "Renkler çıkarılamadı. Dosya yolunu kontrol edin."
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1870
+msgid "Colors extracted — tweak and save."
+msgstr "Renkler çıkarıldı. Düzenleyip kaydedin."
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1883
+#, python-brace-format
+msgid "Wallpaper source: {source}"
+msgstr "Duvar kâğıdı kaynağı: {source}"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1893
+msgid "Enter a theme name first."
+msgstr "Önce bir tema adı girin."
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1897
+msgid "Saved — switching to Themes tab…"
+msgstr "Kaydedildi, Temalar sekmesine geçiliyor…"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1923
+msgid "Developer Tools"
+msgstr "Geliştirici Araçları"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1929
+msgid "<b>Theme Sources</b>"
+msgstr "<b>Tema Kaynakları</b>"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1945
+msgid "registry.json missing or invalid — cannot display sources"
+msgstr "registry.json eksik veya geçersiz, kaynaklar görüntülenemiyor"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1957
+msgid "Added"
+msgstr "Eklendi"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1957
+msgid "Last Checked"
+msgstr "Son Kontrol"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1957
+msgid "Source"
+msgstr "Kaynak"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1957
+msgid "Status"
+msgstr "Durum"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1985
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:2069
+msgid "Installed"
+msgstr "Yüklü"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1985
+msgid "Not installed"
+msgstr "Yüklü değil"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1995
+msgid "Install"
+msgstr "Yükle"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1995
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:2072
+msgid "Update"
+msgstr "Güncelle"
+
+#: usr/share/alacritty-tweak-tool/alacritty_gui.py:1999
+msgid "Built-in source — edit manually"
+msgstr "Yerleşik kaynak, elle düzenleyin"
+
+#: po/alacritty-tweak-tool.desktop.in:3
+msgid "Terminal Configuration Tool"
+msgstr "Terminal yapılandırma aracı"
+
+#: po/alacritty-tweak-tool.desktop.in:5
+msgid "Configure Alacritty terminal — themes, fonts, and behavior"
+msgstr "Alacritty terminalini yapılandırın: temalar, yazı tipleri ve davranış"
+
+#: po/alacritty-tweak-tool.desktop.in:11
+msgid "alacritty;terminal;theme;color;font;tweak"
+msgstr ""
+"alacritty;terminal;theme;color;font;tweak;uçbirim;tema;renk;yazı tipi;ince "
+"ayar"

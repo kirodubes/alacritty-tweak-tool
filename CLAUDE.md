@@ -64,6 +64,19 @@ usr/share/alacritty-tweak-tool/
 | `alacritty_themes.py`     | `load_themes_by_source()`, `apply_theme()`, `export_theme()`, color utils                                                |
 | `log.py`                  | `DEBUG` / `DEV` flags; `log_section`, `log_subsection`, `log_info`, `log_success`, `log_warn`, `log_error`, `log_timing` |
 
+## Translations
+
+- `alacritty_i18n.py` uses the `alacritty-tweak-tool` gettext domain and catalogs in `usr/share/locale/`.
+- The interface supports `nl de es fr pt_BR ru hu it tr pl ja zh_CN ro` plus English. It follows the system language
+  until the user chooses another in the header dropdown; the choice is saved in app preferences and applied after
+  restarting. `ALTT_LANGUAGE` pins a catalog for off-screen tests and takes precedence over the saved choice.
+- Translate whole UI messages with `_()` and counts with `ngettext()`. Use `N_()` for config-backed labels, then
+  translate only their displayed text; Alacritty config values, keys, paths, commands, and product names stay
+  unchanged.
+- `po/make-mo.sh` refreshes the template, merges and compiles catalogs, and regenerates the desktop entry. The
+  existing desktop `GenericName` and `Comment` translations remain in its template so generation adds only the
+  localized `Name[xx]` entries.
+
 ## Development Patterns
 
 ### Logging
@@ -157,6 +170,8 @@ If the user re-asks after a proposal+question, just implement — they missed th
 
 ## Recent Work
 
+- **2026.10.31** — Added gettext localization for 13 languages, a header language selector with saved choice and
+  restart, translated UI labels/messages, plural-aware theme counts, and gettext build files
 - **2026.05.18** — Switched to ruff (check + format); VTE fastfetch respawns on resize via 500ms poll + `map` signal + `COLUMNS` env strip + two-poll stability check; Dev tab rewritten to use `data/themes/registry.json` with Install/Update buttons per source; TODO cleared; added **Kiro** theme group (`data/themes/kiro/`) with OhSoPale and NotSoPale themes
 - **2026.05.17** — VTE made optional (GTK3/GTK4 conflict on XFCE4 VirtualBox); window size persisted via `close-request` + prefs.json; Quit button fixed to use `window.close()` so save fires; all `vte3` references corrected to `vte4`; theme cache added (1429ms → 3ms on warm launch)
 - **2026.05.16** — Initial standalone project split from archlinux-tweak-tool-gtk4

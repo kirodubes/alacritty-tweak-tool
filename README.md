@@ -55,6 +55,16 @@ python3 usr/share/alacritty-tweak-tool/alacritty-tweak-tool.py --debug
 
 No sudo required — runs as the current user.
 
+## Languages
+
+The interface is available in English, Dutch, German, Spanish, French, Brazilian Portuguese, Russian, Hungarian,
+Italian, Turkish, Polish, Japanese, Simplified Chinese, and Romanian. It follows the system language by default.
+Choose another language from the header dropdown and select **Restart now** to apply it; the choice is saved for
+future launches.
+
+The gettext catalogs are in `po/`. After changing English UI text, run `bash po/make-mo.sh` to refresh the template,
+compile the catalogs, and regenerate the desktop entry.
+
 <!-- KIRO-FUNDING-FOOTER:START — managed by Kiro-HQ/cascade-readme-footer.sh -->
 ## Help fund Kiro
 

@@ -24,15 +24,17 @@ if "utf-8" not in _cur_locale.lower() and "utf8" not in _cur_locale.lower():
     os.environ["LANG"] = "C.UTF-8"
     os.environ["LC_ALL"] = "C.UTF-8"
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, BASE_DIR)
+
+import alacritty_i18n  # noqa: E402
+
 import subprocess  # noqa: E402
 
 import gi  # noqa: E402
 
 gi.require_version("Gtk", "4.0")
 from gi.repository import Gtk  # noqa: E402
-
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, BASE_DIR)
 
 import alacritty_config  # noqa: E402
 import alacritty_gui as gui_module  # noqa: E402
@@ -69,7 +71,7 @@ class Main(Gtk.ApplicationWindow):
     """Main application window."""
 
     def __init__(self, app):
-        super().__init__(application=app, title="Alacritty Tweak Tool")
+        super().__init__(application=app, title=alacritty_i18n.N_("Alacritty Tweak Tool"))
         prefs = alacritty_config.load_prefs()
         w = prefs.get("window_width", 900)
         h = prefs.get("window_height", 580)
@@ -83,7 +85,7 @@ class Main(Gtk.ApplicationWindow):
         themes_dir = os.path.join(BASE_DIR, "data", "themes")
         toml_count = sum(
             1
-            for _, _, files in os.walk(themes_dir)
+            for _dirpath, _dirnames, files in os.walk(themes_dir)
             for f in files
             if f.endswith(".toml")
         )
@@ -128,6 +130,12 @@ def main():
         log.DEV = True
         filtered_argv = [a for a in filtered_argv if a != "--dev"]
         log.log_section("Dev mode enabled")
+    if "--page" in filtered_argv:
+        page_index = filtered_argv.index("--page")
+        if page_index + 1 >= len(filtered_argv) or filtered_argv[page_index + 1] != "main":
+            log.log_error("The only supported screenshot page is 'main'.")
+            raise SystemExit(2)
+        filtered_argv = filtered_argv[:page_index] + filtered_argv[page_index + 2 :]
     app = AlacrittyTweakApp()
     sys.exit(app.run(filtered_argv))
 
